@@ -2,6 +2,7 @@ package sonok.content;
 
 import javax.swing.JPanel;
 
-class Page_Base extends JPanel {
-
+abstract class Page_Base extends JPanel {
+	JPanel viewpanel, editpanel;
 }
+
