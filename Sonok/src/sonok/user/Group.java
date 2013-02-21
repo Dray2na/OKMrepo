@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Group {
 	private ArrayList<User> users = new ArrayList<User>();
+	//
 
 	public boolean addUser(User e) {
 		return users.add(e);
