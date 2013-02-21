@@ -2,11 +2,13 @@ package sonok.content;
 
 import java.util.ArrayList;
 
+import sonok.global.func;
+
 public class ContentManager {
 	
-	class Content {
-		Page_Base page;
-		ArrayList<String> keywords = new ArrayList<String>();
+	public class Content {
+		private Page_Base page;
+		private ArrayList<String> keywords = new ArrayList<String>();
 		
 		public Content(Page_Base p, ArrayList<String> kw) {
 			page = p;
@@ -36,5 +38,51 @@ public class ContentManager {
 		
 	}
 
-	ArrayList<Content> contents = new ArrayList<Content>();
+	private ArrayList<Content> contents = new ArrayList<Content>();
+
+	public boolean add(Content e) {
+		return contents.add(e);
+	}
+
+	public void clear() {
+		contents.clear();
+	}
+
+	public Content get(int index) {
+		return contents.get(index);
+	}
+
+	public int indexOf(Object o) {
+		return contents.indexOf(o);
+	}
+
+	public Content remove(int index) {
+		return contents.remove(index);
+	}
+
+	public boolean remove(Object o) {
+		return contents.remove(o);
+	}
+
+	public Content set(int index, Content element) {
+		return contents.set(index, element);
+	}
+
+	public int size() {
+		return contents.size();
+	}
+	
+	public ArrayList<Content> Search(ArrayList<String> words) {
+		ArrayList<Content> result = new ArrayList<Content>();
+		
+		return result;		
+	}
+	
+	public ArrayList<Content> Search(String s) {
+		ArrayList<String> words = func.SplitLines(s,',');
+		
+		return Search(words);		
+	}
+	
+	
 }
