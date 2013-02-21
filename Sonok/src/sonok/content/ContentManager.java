@@ -1,7 +1,6 @@
 package sonok.content;
 
 import java.util.ArrayList;
-
 import sonok.global.func;
 
 public class ContentManager {
@@ -74,6 +73,14 @@ public class ContentManager {
 	
 	public ArrayList<Content> Search(ArrayList<String> words) {
 		ArrayList<Content> result = new ArrayList<Content>();
+		
+		for (int i = 0; i < contents.size(); i++)
+		for (int k = 0; k < words.size(); k++) 
+		{			
+			if (contents.get(i).contains(words.get(k))) {
+				result.add(contents.get(i));
+			}
+		}
 		
 		return result;		
 	}
