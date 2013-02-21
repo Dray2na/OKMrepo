@@ -89,7 +89,6 @@ public class ContentManager {
 		ArrayList<String> words = func.SplitLines(s,',');
 		
 		return Search(words);		
-	}
-	
+	}	
 	
 }
