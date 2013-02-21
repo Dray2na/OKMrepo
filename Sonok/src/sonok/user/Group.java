@@ -6,35 +6,35 @@ public class Group {
 	private ArrayList<User> users = new ArrayList<User>();
 
 	///
-	public boolean addUser(User e) {
+	public boolean add(User e) {
 		return users.add(e);
 	}
 
-	public void clearUser() {
+	public void clear() {
 		users.clear();
 	}
 
-	public boolean containsUser(Object o) {
+	public boolean contains(Object o) {
 		return users.contains(o);
 	}
 
-	public User getUser(int index) {
+	public User get(int index) {
 		return users.get(index);
 	}
 
-	public int indexOfUser(Object o) {
+	public int indexOf(Object o) {
 		return users.indexOf(o);
 	}
 
-	public User removeUser(int index) {
+	public User remove(int index) {
 		return users.remove(index);
 	}
 
-	public boolean removeUser(Object o) {
+	public boolean remove(Object o) {
 		return users.remove(o);
 	}
 
-	public int sizeUser() {
+	public int count() {
 		return users.size();
 	}
 	
