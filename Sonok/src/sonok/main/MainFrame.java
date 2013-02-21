@@ -1,4 +1,4 @@
-package sonok.gui;
+package sonok.main;
 
 import javax.swing.JFrame;
 
