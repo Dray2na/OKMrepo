@@ -1,9 +1,5 @@
 package sonok.main;
 
-import java.awt.event.MouseEvent;
-
-import sonok.global.*;
-
 public class Main {
 
 	public static ContentManager Manager;
