@@ -18,26 +18,14 @@ public abstract class guiMenuNode extends guiComponent {
 		
 	private boolean isOpen;
 	private int state = 0;
+
+	public abstract void onClick();	
 	
 	public boolean isOpen() {
 		return isOpen;
 	}
 	public void setOpen(boolean isOpen) {
 		this.isOpen = isOpen;
-		
-		if (isOpen) {
-			if (childs.size() > 0) {
-				for (int i = 0; i < childs.size(); i++) {
-					childs.get(i).moveTo(getX()+10, getY() + (getHeight()*(i+1)), getWidth()-10, getHeight());
-				}				
-			}
-		} else {
-			if (childs.size() > 0) {
-				for (int i = 0; i < childs.size(); i++) {
-					childs.get(i).moveTo(getX(),getY(),32,0);
-				}				
-			}
-		}
 	}	
 	public void expand() {
 		setOpen(true);
@@ -118,36 +106,50 @@ public abstract class guiMenuNode extends guiComponent {
 		int textpos = (icon != null) ? h+10 : 10;
 		
 		Color back = getBackground();
-		Color front = getForeground();
+		Color front;
+
+		switch (state) {
+
+		case 1:
+			front = Color.BLUE;
+			break;
+		case 2:
+			front = Color.GREEN;			
+			break;
+		default:
+			front = Color.BLACK;
+			break;
+		}
 		
 	 //draw
 
 		if (image != null) {
 			g.drawImage(image, 0, 0, w, h, null);			
 		}
-
+		
 		if (icon != null) {
 			g.drawImage(icon, 0, 0, h, h, null);
 		}
 		
-		g.setColor(front);
-		
-		g.drawString(caption, textpos, h / 2);
-		
+		g.setColor(front);		
+		g.drawString(caption, textpos, h / 2);		
 		g.draw3DRect(0, 0, w, h, false);
+	}
+		
+	@Override	
+	void onMouseDown(MouseEvent e){
+		state = 2;
+		onClick();
 	}
 	
 	@Override
-	public abstract void onMouseDown(MouseEvent e);
-	
-	@Override
  	void onMouseUp(MouseEvent e) {
-
+		state = 0;
 	}
 
 	@Override
 	void onMouseMove(MouseEvent e) {
-
+		state = 1;
 	}
 
 	@Override

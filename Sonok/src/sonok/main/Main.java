@@ -22,7 +22,7 @@ public class Main {
 		guiMenuNode p = new guiMenuNode("Test",new CImage("./data/icon/user.png").getScaledInstance(64, 64)) {
 			
 			@Override
-			public void onMouseDown(MouseEvent e) {
+			public void onClick() {
 				toggle();				
 			}
 		};
@@ -35,11 +35,10 @@ public class Main {
 		for (int i = 0; i < 15; i++) {
 			
 			guiMenuNode p2 = new guiMenuNode("Test",new CImage("./data/icon/user.png").getScaledInstance(64, 64)) {
-				
+
 				@Override
-				public void onMouseDown(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
+				public void onClick() {
+					//				
 				}
 			};
 
