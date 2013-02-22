@@ -16,6 +16,5 @@ public class Main {
 	private static void Init() {
 		Manager = new ContentManager();
 		Frame = new MainFrame();
-
 	}
 }
