@@ -28,15 +28,15 @@ public abstract class guiMenuNode extends guiComponent {
 		}
 	}
 	
-	private void expand() {
+	public void expand() {
 		setOpen(true);
 	}
 	
-	private void collapse() {
+	public void collapse() {
 		setOpen(false);
 	}
 	
-	private void toggle() {
+	public void toggle() {
 		setOpen(!isOpen);
 	}
 
