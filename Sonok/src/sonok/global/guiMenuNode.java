@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 public abstract class guiMenuNode extends guiComponent {
 
+	guiMenu owner;
+	
 	Image icon;
 	Image image;
 	String caption;
@@ -20,6 +22,45 @@ public abstract class guiMenuNode extends guiComponent {
 	private int state = 0;
 
 	public abstract void onClick();	
+
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+	 //init	
+		int w = getWidth()-1;
+		int h = getHeight()-1;
+		
+		int textpos = (icon != null) ? h+10 : 10;
+		
+		Color back = getBackground();
+		Color front;
+
+		switch (state) {
+			case 1:
+				front = Color.BLUE;
+				break;
+			case 2:
+				front = Color.GREEN;			
+				break;
+			default:
+				front = Color.BLACK;
+				break;
+		}
+		
+	 //draw
+
+		if (image != null) {
+			g.drawImage(image, 0, 0, w, h, null);			
+		}
+		
+		if (icon != null) {
+			g.drawImage(icon, 0, 0, h, h, null);
+		}
+		
+		g.setColor(front);		
+		g.drawString(caption, textpos, h / 2);		
+		g.draw3DRect(0, 0, w, h, false);
+	}
 	
 	public boolean isOpen() {
 		return isOpen;
@@ -95,46 +136,6 @@ public abstract class guiMenuNode extends guiComponent {
 		return childs.size();
 	}
 
-
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-	 //init	
-		int w = getWidth()-1;
-		int h = getHeight()-1;
-		
-		int textpos = (icon != null) ? h+10 : 10;
-		
-		Color back = getBackground();
-		Color front;
-
-		switch (state) {
-
-		case 1:
-			front = Color.BLUE;
-			break;
-		case 2:
-			front = Color.GREEN;			
-			break;
-		default:
-			front = Color.BLACK;
-			break;
-		}
-		
-	 //draw
-
-		if (image != null) {
-			g.drawImage(image, 0, 0, w, h, null);			
-		}
-		
-		if (icon != null) {
-			g.drawImage(icon, 0, 0, h, h, null);
-		}
-		
-		g.setColor(front);		
-		g.drawString(caption, textpos, h / 2);		
-		g.draw3DRect(0, 0, w, h, false);
-	}
 		
 	@Override	
 	void onMouseDown(MouseEvent e){
