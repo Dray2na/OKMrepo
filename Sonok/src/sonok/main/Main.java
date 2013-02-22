@@ -30,6 +30,6 @@ public class Main {
 		Frame.add(p);
 		
 		p.setBounds(10,10,200,200);
-		p.moveTo(150,50,125,125);
+		p.moveTo(10,50,250,50);
 	}
 }

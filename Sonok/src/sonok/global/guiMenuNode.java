@@ -1,5 +1,6 @@
 package sonok.global;
 
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
@@ -8,16 +9,29 @@ import java.util.ArrayList;
 
 public abstract class guiMenuNode extends guiComponent {
 	
-	Image icon;
+	Image image;
 	String caption;
 	
 	ArrayList<guiMenuNode> childs = new ArrayList<guiMenuNode>();
 
-	public guiMenuNode(Image icon, String caption) {
+	public guiMenuNode(String cap, Image img) {
 		super();
+		
+		image = img;
+		caption = cap;
 
 	}
 	
+	public guiMenuNode(String cap){
+		caption = cap;
+		image = null;
+	}
+	
+	public guiMenuNode() {
+		caption = "Node";
+		image = null;
+	}
+
 	public boolean addChild(guiMenuNode e) {
 		return childs.add(e);
 	}
@@ -47,6 +61,17 @@ public abstract class guiMenuNode extends guiComponent {
 	}
 
 
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		
+		int w = getWidth()-1;
+		int h = getHeight()-1;
+		
+		g.draw3DRect(0, 0, w, h, true);
+		g.drawString(caption, 10, h / 2);
+	}
+	
 	@Override
 	public abstract void onMouseDown(MouseEvent e);
 	
