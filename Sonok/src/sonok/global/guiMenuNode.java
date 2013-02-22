@@ -12,6 +12,34 @@ public abstract class guiMenuNode extends guiComponent {
 	Image image;
 	String caption;
 	
+	private boolean isOpen;
+	
+	public boolean isOpen() {
+		return isOpen;
+	}
+
+	public void setOpen(boolean isOpen) {
+		this.isOpen = isOpen;
+		
+		if (isOpen) {
+			//expand
+		} else {
+			//collapse
+		}
+	}
+	
+	private void expand() {
+		setOpen(true);
+	}
+	
+	private void collapse() {
+		setOpen(false);
+	}
+	
+	private void toggle() {
+		setOpen(!isOpen);
+	}
+
 	ArrayList<guiMenuNode> childs = new ArrayList<guiMenuNode>();
 
 	public guiMenuNode(String cap, Image img) {
@@ -69,7 +97,8 @@ public abstract class guiMenuNode extends guiComponent {
 		int h = getHeight()-1;
 		
 		g.draw3DRect(0, 0, w, h, true);
-		g.drawString(caption, 10, h / 2);
+		g.drawString(caption, h+10, h / 2);
+		g.drawImage(image, 0, 0, h, h, null);
 	}
 	
 	@Override
