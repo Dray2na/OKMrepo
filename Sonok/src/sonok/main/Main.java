@@ -23,8 +23,7 @@ public class Main {
 			
 			@Override
 			public void onMouseDown(MouseEvent e) {
-				toggle();
-				
+				toggle();				
 			}
 		};
 
