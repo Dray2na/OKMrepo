@@ -1,13 +1,19 @@
 package sonok.main;
 
+import sonok.content.ContentManager;
+
 public class Main {
 
-	/**
-	 * @param args
-	 */
+	static ContentManager Manager;
+	static MainFrame Frame;
+	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		Init();
+	}
+	
+	private static void Init() {
+		Manager = new ContentManager();
+		Frame = new MainFrame();
 
-		
 	}
 }
