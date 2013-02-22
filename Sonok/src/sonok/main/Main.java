@@ -19,32 +19,6 @@ public class Main {
 		Frame = new MainFrame();
 		
 		
-		guiMenuNode p = new guiMenuNode("Test",new CImage("./data/icon/user.png").getScaledInstance(64, 64)) {
-			
-			@Override
-			public void onClick() {
-				toggle();				
-			}
-		};
-
-		Frame.add(p);
-
-		p.moveTo(10,32,250,32);
 		
-
-		for (int i = 0; i < 15; i++) {
-			
-			guiMenuNode p2 = new guiMenuNode("Test",new CImage("./data/icon/user.png").getScaledInstance(64, 64)) {
-
-				@Override
-				public void onClick() {
-					//				
-				}
-			};
-
-			p.addChild(p2);
-			Frame.add(p2);
-			
-		}
 	}
 }
