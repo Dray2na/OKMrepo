@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public abstract class guiMenuNode extends guiComponent {
-	
+
 	public guiMenuNode() {
 		// TODO Auto-generated constructor stub
 	}
