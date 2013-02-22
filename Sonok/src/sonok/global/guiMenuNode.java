@@ -1,93 +1,117 @@
 package sonok.global;
 
+import java.awt.Image;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public abstract class guiMenuNode extends guiComponent {
+	
+	Image icon;
+	String caption;
+	
+	ArrayList<guiMenuNode> childs = new ArrayList<guiMenuNode>();
 
-	public guiMenuNode() {
-		// TODO Auto-generated constructor stub
+	public guiMenuNode(Image icon, String caption) {
+		super();
+
 	}
 	
+	public boolean addChild(guiMenuNode e) {
+		return childs.add(e);
+	}
+
+	public void clearChilds() {
+		childs.clear();
+	}
+
+	public guiMenuNode getChild(int index) {
+		return childs.get(index);
+	}
+
+	public int indexOfChild(Object o) {
+		return childs.indexOf(o);
+	}
+
+	public void removeChild(int index) {
+		childs.remove(index);
+	}
+
+	public void removeChild(Object o) {
+		childs.remove(o);
+	}
+
+	public int countOfChilds() {
+		return childs.size();
+	}
+
+
 	@Override
 	public abstract void onMouseDown(MouseEvent e);
 	
 	@Override
  	void onMouseUp(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void onMouseMove(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void onMouseDrag(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void onMouseWheel(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void onKey(KeyEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void onKeyUp(KeyEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void onKeyDown(KeyEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void onResize(ComponentEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void onMove(ComponentEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void onShow(ComponentEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void onHide(ComponentEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void doMove() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	void doDraw() {
-		// TODO Auto-generated method stub
 
 	}
 
