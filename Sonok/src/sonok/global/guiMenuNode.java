@@ -4,8 +4,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import sonok.main.Main;
-
 public abstract class guiMenuNode extends guiComponent {
 	
 	public guiMenuNode() {
@@ -13,7 +11,7 @@ public abstract class guiMenuNode extends guiComponent {
 	}
 	
 	@Override
-	abstract void onMouseDown(MouseEvent e);
+	public abstract void onMouseDown(MouseEvent e);
 	
 	@Override
  	void onMouseUp(MouseEvent e) {
