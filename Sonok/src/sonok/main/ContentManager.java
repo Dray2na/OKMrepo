@@ -1,6 +1,8 @@
-package sonok.content;
+package sonok.main;
 
 import java.util.ArrayList;
+
+import sonok.content.Page_Base;
 import sonok.global.func;
 
 public class ContentManager {

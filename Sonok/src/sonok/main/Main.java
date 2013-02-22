@@ -1,11 +1,13 @@
 package sonok.main;
 
-import sonok.content.ContentManager;
+import java.awt.event.MouseEvent;
+
+import sonok.global.*;
 
 public class Main {
 
-	static ContentManager Manager;
-	static MainFrame Frame;
+	public static ContentManager Manager;
+	public static MainFrame Frame;
 	
 	public static void main(String[] args) {
 		Init();
