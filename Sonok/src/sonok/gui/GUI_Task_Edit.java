@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;
 import javax.swing.SpringLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JLabel;
 
 public class GUI_Task_Edit extends JPanel {
 
@@ -23,14 +24,22 @@ public class GUI_Task_Edit extends JPanel {
 	 * Create the panel.
 	 */
 	public GUI_Task_Edit() {
+		
+		JLabel lblAufabetopiclabelpanel = new JLabel("Aufabe_Topic_Label_Panel");
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 432, Short.MAX_VALUE)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblAufabetopiclabelpanel, GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 428, Short.MAX_VALUE)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblAufabetopiclabelpanel, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(248, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 
