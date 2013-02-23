@@ -1,5 +1,8 @@
 package sonok.main;
 
+import javax.swing.JPanel;
+
+import sonok.global.guiMenuNode;
 import sonok.gui.GUI_LogIn;
 import sonok.gui.GUI_Menu;
 	
@@ -14,8 +17,67 @@ public class Main {
 	}
 	
 	private static void Init() {
-		Frame.moveTo(200, 200, 500, 500);
+		Frame.setBounds(200, 200, 200, 500);
 		Frame.setMenu(Menu);
-		Frame.Update();
+		Frame.addPanel(new JPanel());
+
+		guiMenuNode n = new guiMenuNode("Benutzer","./data/icon/user.png") {			
+			@Override
+			public void onClick(int button) {
+				toggle();
+				Menu.update();
+			}
+		};
+		guiMenuNode n2 = new guiMenuNode("User1","./data/icon/offline.png") {			
+			@Override
+			public void onClick(int button) {
+				toggle();
+				Menu.update();				
+			}
+		};
+		guiMenuNode n3 = new guiMenuNode("User2","./data/icon/offline.png") {			
+			@Override
+			public void onClick(int button) {
+				toggle();
+				Menu.update();	
+			}
+		};
+		guiMenuNode n4 = new guiMenuNode("User3","./data/icon/user.png") {			
+			@Override
+			public void onClick(int button) {
+				toggle();
+				Menu.update();					
+			}
+		};
+		guiMenuNode n5 = new guiMenuNode(null,null,"./data/icon/delete.png") {			
+			@Override
+			public void onClick(int button) {
+				toggle();
+				Menu.update();					
+			}
+		};
+		Menu.addNode(n);
+		Menu.addChildNode(n,n2);
+		Menu.addChildNode(n,n3);
+		Menu.addChildNode(n,n4);
+		Menu.addChildNode(n,n5);
+
+		Menu.addNode(new guiMenuNode("Nachricchten","./data/icon/note.png") {			
+			@Override
+			public void onClick(int button) {				
+			}
+		});
+		Menu.addNode(new guiMenuNode("Web","./data/icon/browser.png") {			
+			@Override
+			public void onClick(int button) {				
+			}
+		});
+		Menu.addNode(new guiMenuNode("Aufgaben","./data/icon/task.png") {			
+			@Override
+			public void onClick(int button) {				
+			}
+		});
+		
+		Menu.update();
 	}	
 }

@@ -21,15 +21,38 @@ public abstract class guiMenuNode extends guiComponent {
 		
 	private boolean isOpen;
 	private int state = 0;
-	private int totalHeight;
+	private int margin = 3;
 	
 	//Konstruktor
 	public guiMenuNode(String cap, Image ico, Image img) {
 		super();
 
+
+		if (cap != null)
+			caption = cap;
+		else
+			caption = "";
 		image = img;
 		icon = ico;
-		caption = cap;
+
+	}
+	public guiMenuNode(String cap, String ico, String img) {
+		super();
+
+		if (cap != null)
+			caption = cap;
+		else
+			caption = "";
+		
+		if ((img != null) && (img != ""))
+			image = new CImage(img).getImage();
+		else
+			image = null;
+			
+		if ((ico != null) && (ico != ""))
+			icon = new CImage(ico).getImage();
+		else
+			icon = null;
 
 	}
 	public guiMenuNode(String cap, Image ico) {
@@ -38,6 +61,19 @@ public abstract class guiMenuNode extends guiComponent {
 		image = null;
 		icon = ico;
 		caption = cap;
+	}
+	public guiMenuNode(String cap, String ico) {
+		super();		
+
+		if (cap != null)
+			caption = cap;
+		else
+			caption = "";
+		image = null;
+		if ((ico != null) && (ico != ""))
+			icon = new CImage(ico).getImage();
+		else
+			icon = null;
 	}
 	public guiMenuNode(String cap){
 		super();
@@ -89,7 +125,7 @@ public abstract class guiMenuNode extends guiComponent {
 		}
 		
 		if (icon != null) {
-			g.drawImage(icon, 0, 0, h, h, null);
+			g.drawImage(icon, margin, margin, h-margin*2, h-margin*2, null);
 		}
 		
 		g.setFont(new Font("Arial",
@@ -102,34 +138,49 @@ public abstract class guiMenuNode extends guiComponent {
 	}
 	//Methoden
 	public int getTotalHeight() {
-		return totalHeight;
-	}
-	public void updateChilds(final int childHeight) {
-		int result = 0;
-		final int ch = childHeight;
-		final int width = getWidth();
-		final int cw = (int) Math.round(width*0.9);
-		final int cx = (int)(getX()+Math.round(width*0.1));
+		int result = 32;
 		
-		result += this.getHeight();
-		
-		for (int i = 0; i < childs.size(); i++) {
-			guiMenuNode c = childs.get(i);
-
-			result += ch;
-			c.moveTo(cx, result, cw , ch);			
+		if (isOpen) {
+			for (int i = 0; i < childs.size(); i++) {
+				result += childs.get(i).getTotalHeight();		
+			}
 		}
 		
-		totalHeight = result;
+		return result;
 	}
-	
+	public int updateChilds(final int childHeight) {
+		final int width = getWidth();		
+		final int cx = (int) (getX()+Math.round(width*0.05));
+		int cy = this.getHeight();
+		final int cw = (int) Math.round(width*0.95);
+		final int ch = childHeight;
+				
+		for (int i = 0; i < childs.size(); i++) {
+			guiMenuNode c = childs.get(i);
+					
+			c.moveTo(cx, this.getY() + cy, cw , ch);				
+			c.updateChilds(childHeight);
+			
+			cy += c.getTotalHeight();		
+		}
+		
+		return cy;
+	}
+	public void updateChilds() {
+		updateChilds(isOpen ? 32 : 0);
+	}
 	public boolean isOpen() {
 		return isOpen;		
 	}
 	public void setOpen(boolean open) {
-		updateChilds(open ? 32 : 0);
+		isOpen = open;	
 		
-		isOpen = open;		
+		if (!open)
+		for (int i = 0; i < childs.size(); i++) {
+			childs.get(i).setOpen(open);			
+		}
+		
+		updateChilds();			
 	}	
 	public void expand() {
 		setOpen(true);
@@ -211,7 +262,11 @@ public abstract class guiMenuNode extends guiComponent {
 	}
 	@Override
 	void onResize(ComponentEvent e) {
-		
+		if (!isOpen) {
+			for (int i = 0; i < childs.size(); i++) {
+				childs.get(i).setBounds(getBounds());
+			}
+		}
 	}
 	@Override
 	void onMove(ComponentEvent e) {
@@ -227,6 +282,6 @@ public abstract class guiMenuNode extends guiComponent {
 	}
 	@Override
 	void onMoveDone() {
-		updateChilds(isOpen ? this.getHeight()/2 : 0);
+		updateChilds();
 	}
 }
