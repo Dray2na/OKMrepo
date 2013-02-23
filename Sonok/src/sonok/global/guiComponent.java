@@ -34,10 +34,18 @@ abstract class guiComponent extends JPanel {
 		        onMouseDown(e);
 		      }
 		      
+			  @Override
+			  public void mouseReleased(MouseEvent e)
+			  {
+			    onMouseUp(e);
+			  }
 		      @Override
-		      public void mouseReleased(MouseEvent e)
-		      {
-		        onMouseUp(e);
+			  public void mouseEntered(MouseEvent e) {
+		    	  onMouseEntered(e);
+			  }
+		      @Override
+		      public void mouseExited(MouseEvent e) {
+		    	onMouseExited(e);
 		      }
 		    });
 	    addMouseMotionListener(new MouseMotionListener() {  
@@ -95,6 +103,8 @@ abstract class guiComponent extends JPanel {
   //Input-Events
 	abstract void onMouseDown(MouseEvent e);
 	abstract void onMouseUp(MouseEvent e);
+	abstract void onMouseEntered(MouseEvent e);
+	abstract void onMouseExited(MouseEvent e);
 	abstract void onMouseMove(MouseEvent e);
 	abstract void onMouseDrag(MouseEvent e);
 	abstract void onMouseWheel(MouseEvent e);
@@ -106,9 +116,10 @@ abstract class guiComponent extends JPanel {
 	abstract void onMove(ComponentEvent e);
 	abstract void onShow(ComponentEvent e);
 	abstract void onHide(ComponentEvent e);
+	abstract void onMoveDone();
   //Object-Events
-	abstract void doMove();
-	abstract void doDraw();
+	//abstract void doMove();
+	//abstract void doDraw();
   //Getter & Setter
 	public void moveTo(final Rectangle Bounds, final int acceleration) {		
 		new Timer(true).scheduleAtFixedRate(new TimerTask() {
@@ -145,7 +156,8 @@ abstract class guiComponent extends JPanel {
 					Math.abs(curbounds.w-tarbounds.w)<=1 &&
 					Math.abs(curbounds.h-tarbounds.h)<=1 )
 				{	
-					setBounds(tarbounds.getRectangle());			
+					setBounds(tarbounds.getRectangle());	
+					onMoveDone();
 					cancel();
 				} else {
 					setBounds(curbounds.getRectangle());	

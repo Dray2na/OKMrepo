@@ -28,8 +28,11 @@ public class guiMenu extends JPanel {
 	}
 
 	public void update(){
+		int c = 0;
+		
 		for (int i = 0; i < nodes.size(); i++) {
 			
+			c += nodes.get(i).getHeight();
 		}
 	}
 }
