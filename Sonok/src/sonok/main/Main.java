@@ -16,5 +16,6 @@ public class Main {
 	private static void Init() {
 		Frame.moveTo(200, 200, 500, 500);
 		Frame.setMenu(Menu);
+		Frame.Update();
 	}	
 }

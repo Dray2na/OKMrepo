@@ -16,6 +16,8 @@ import sonok.global.guiMenu;
 public class MainFrame extends JFrame {
 	private JPanel menu;
 	private ArrayList<CPanel> panels = new ArrayList<CPanel>();
+	final int windowheight = 600;
+	final int windowwidth = 800;
 	
 	public MainFrame() {
 		Init();
@@ -52,14 +54,21 @@ public class MainFrame extends JFrame {
 
 	public void Update() {
 		int c = 0;
+		final int x = getX();
+		final int y = getY();
+		final int w;
+		final int h = windowheight;
 		
-		if (panels.size()>0) {
+		if (panels.size()>0) {					
+			for (int i = 0; i < panels.size(); i++) {
+				panels.get(i).setTarget(0, c, 300, 300);
+				c += panels.get(i).getPanel().getHeight();
+			}
 			
-		}
-		
-		for (int i = 0; i < panels.size(); i++) {
-			panels.get(i).setTarget(0, c, 300, 300);
-			c += panels.get(i).getPanel().getHeight();
+			w = menu.getWidth();
+		} else {
+			w = windowwidth;
+			
 		}
 	}
 	private void Move() {
