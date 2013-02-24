@@ -19,62 +19,56 @@ public class Main {
 	private static void Init() {
 		Frame.setBounds(200, 200, 200, 500);
 		Frame.setMenu(Menu);
-		Frame.addPanel(new JPanel());
+		Frame.addPanel(new GUI_LogIn());
 
 		guiMenuNode n = new guiMenuNode("Benutzer","./data/icon/user.png") {			
 			@Override
 			public void onClick(int button) {
 				toggle();
-				Menu.update();
 			}
 		};
 		guiMenuNode n2 = new guiMenuNode("User1","./data/icon/offline.png") {			
 			@Override
 			public void onClick(int button) {
-				Menu.update();				
+				setOpen(true);
 			}
 		};
 		guiMenuNode n3 = new guiMenuNode("User2","./data/icon/offline.png") {			
 			@Override
 			public void onClick(int button) {
-				Menu.update();	
 			}
 		};
 		guiMenuNode n4 = new guiMenuNode("User3","./data/icon/user.png") {			
 			@Override
 			public void onClick(int button) {
-				toggle();
-				Menu.update();					
+				toggle();			
 			}
 		};
 		guiMenuNode n5 = new guiMenuNode("Profil",null,"./data/icon/export.png") {			
 			@Override
 			public void onClick(int button) {
-				toggle();
-				Menu.update();					
+				toggle();				
 			}
 		};
 		guiMenuNode n6 = new guiMenuNode("Nachricht","./data/icon/note.png") {			
 			@Override
 			public void onClick(int button) {
-				toggle();
-				Menu.update();					
+				toggle();				
 			}
 		};
 		guiMenuNode n7 = new guiMenuNode("Aufgaben","./data/icon/task.png") {			
 			@Override
 			public void onClick(int button) {
-				toggle();
-				Menu.update();					
+				toggle();					
 			}
 		};
 		guiMenuNode n8 = new guiMenuNode("Profil","./data/icon/user.png") {			
 			@Override
 			public void onClick(int button) {
-				toggle();
-				Menu.update();					
+				toggle();				
 			}
 		};
+		
 		Menu.addNode(n);
 		Menu.addChildNode(n,n2);
 		Menu.addChildNode(n,n3);
@@ -83,7 +77,6 @@ public class Main {
 		Menu.addChildNode(n4,n6);
 		Menu.addChildNode(n4,n7);
 		Menu.addChildNode(n4,n8);
-
 		Menu.addNode(new guiMenuNode("Nachrichten","./data/icon/note.png") {			
 			@Override
 			public void onClick(int button) {				

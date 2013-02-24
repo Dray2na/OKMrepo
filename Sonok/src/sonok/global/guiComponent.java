@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 abstract class guiComponent extends JPanel {
+	boolean moving = false;
   //Constructor
 	public guiComponent() {
 		Init();
@@ -121,7 +122,7 @@ abstract class guiComponent extends JPanel {
 	//abstract void doMove();
 	//abstract void doDraw();
   //Getter & Setter
-	public void moveTo(final Rectangle Bounds, final int acceleration) {		
+	public void moveTo(final Rectangle Bounds, final int acceleration) {
 		new Timer(true).scheduleAtFixedRate(new TimerTask() {
 			RectangleD curbounds = new RectangleD(getBounds());
 			RectangleD tarbounds = new RectangleD(Bounds);
@@ -157,6 +158,7 @@ abstract class guiComponent extends JPanel {
 					Math.abs(curbounds.h-tarbounds.h)<=1 )
 				{	
 					setBounds(tarbounds.getRectangle());	
+					moving = false;
 					onMoveDone();
 					cancel();
 				} else {

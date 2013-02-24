@@ -15,6 +15,7 @@ public class guiMenu extends JPanel {
 		this.add(child);
 		child.setVisible(true);
 		child.setBounds(0,0,elementHeight,elementHeight);
+		child.owner = this;
 		
 		return child;
 	}
@@ -23,6 +24,7 @@ public class guiMenu extends JPanel {
 		this.add(e);
 		e.setVisible(true);
 		e.setBounds(0,0,elementHeight,elementHeight);
+		e.owner = this;
 		
 		return e;
 	}
@@ -51,9 +53,14 @@ public class guiMenu extends JPanel {
 		final int width = getWidth();
 		
 		for (int i = 0; i < nodes.size(); i++) {
-			nodes.get(i).moveTo(0, c, width, elementHeight);
-			//nodes.get(i).updateChilds();
-			c += nodes.get(i).getTotalHeight();
+			final guiMenuNode n = nodes.get(i);
+			n.moveTo(0, c, width, elementHeight);
+			n.MoveDoneEvent = new Thread(){
+				public void run() {
+					n.update();
+				};
+			};
+			c += n.getTotalHeight();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package sonok.main;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -17,7 +18,7 @@ import sonok.global.RectangleD;
 import sonok.global.guiMenu;
 
 public class MainFrame extends JFrame {
-	private JPanel menu;
+	private guiMenu menu;
 	private CPanelManager panelmanager =  new CPanelManager();
 	
 	final int windowheight = 600;
@@ -63,7 +64,7 @@ public class MainFrame extends JFrame {
 		return;
 	}
 
-	public void setMenu(JPanel m) {
+	public void setMenu(guiMenu m) {
 		if (menu != null) {
 			this.remove(menu);
 		}
@@ -71,6 +72,9 @@ public class MainFrame extends JFrame {
 			this.add(m);			
 		}
 		this.menu = m;
+	}
+	public guiMenu getMenu() {
+		return menu;
 	}
 	public void addPanel(JPanel p) {
 		this.add(p);
@@ -118,7 +122,8 @@ public class MainFrame extends JFrame {
 		if (menu != null) {				
 			if (widthMenu > 0) {
 				menu.setVisible(true);	
-				menu.setBounds(xMenu,0,getWidth(),getHeight());			
+				menu.setBounds(xMenu,0,widthMenu,getHeight());		
+				menu.update();
 			} else {
 				menu.setVisible(false);		
 			}
@@ -126,12 +131,18 @@ public class MainFrame extends JFrame {
 		
 		if (widthPanel > 0) {
 			panelmanager.setVisible(true);
-			panelmanager.setBounds(xPanel,0,getWidth(),getHeight());			
+			panelmanager.setBounds(xPanel,0,widthPanel,getHeight());
+			panelmanager.repaint();
 		} else {	
 			panelmanager.setVisible(false);
 		}
 	}
-	
+
+	private void updateWindow() {
+		if (true) {
+			//TODO menu aktiv / panel aktiv größe =...
+		}
+	}
 //==========================================================================================
 //Bounce Fenster, Bounce!
 //==========================================================================================

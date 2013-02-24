@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public abstract class guiMenuNode extends guiComponent {
 
+	Thread MoveDoneEvent;
 	guiMenu owner;
 	
 	Image icon;
@@ -128,12 +129,12 @@ public abstract class guiMenuNode extends guiComponent {
 			g.drawImage(icon, margin, margin, h-margin*2, h-margin*2, null);
 		}
 		
-		g.setFont(new Font("Arial",
-							(state == 1) ? Font.BOLD : Font.PLAIN, 
-							h/2
-				));
+		g.setFont(new Font("Arial",(state == 1) ? Font.BOLD : Font.PLAIN,h/2));
 		g.setColor(front);		
-		g.drawString(caption, textpos, h / 2);		
+		g.drawString(caption, textpos, h / 2);	
+		if (!isOpen && childs.size() > 0) {
+			g.drawString("+"+Integer.toString(childs.size()), w-50, h);				
+		}	
 		g.draw3DRect(0, 0, w, h, !press);
 	}
 	//Methoden
@@ -148,7 +149,7 @@ public abstract class guiMenuNode extends guiComponent {
 		
 		return result;
 	}
-	public int updateChilds(final int childHeight) {
+	public int update(final int childHeight) {
 		final int width = getWidth();		
 		final int cx = (int) (getX()+Math.round(width*0.05));
 		int cy = this.getHeight();
@@ -156,18 +157,18 @@ public abstract class guiMenuNode extends guiComponent {
 		final int ch = childHeight;
 				
 		for (int i = 0; i < childs.size(); i++) {
-			guiMenuNode c = childs.get(i);
-					
-			c.moveTo(cx, this.getY() + cy, cw , ch);				
-			c.updateChilds(childHeight);
+			final guiMenuNode c = childs.get(i);
+								
+			c.moveTo(cx, this.getY() + cy, cw , ch,3);				
+			c.update();
 			
-			cy += c.getTotalHeight();		
+			cy += ch;		
 		}
 		
 		return cy;
 	}
-	public void updateChilds() {
-		updateChilds(isOpen ? 32 : 0);
+	public int update() {
+		return update(isOpen ? 32 : 0);
 	}
 	public boolean isOpen() {
 		return isOpen;		
@@ -181,7 +182,7 @@ public abstract class guiMenuNode extends guiComponent {
 			}
 		}
 		
-		updateChilds();			
+		owner.update();			
 	}	
 	public void expand() {
 		setOpen(true);
@@ -278,6 +279,8 @@ public abstract class guiMenuNode extends guiComponent {
 	}
 	@Override
 	void onMoveDone() {
-		updateChilds();
+		if (MoveDoneEvent != null) {
+			MoveDoneEvent.run();			
+		}
 	}
 }
