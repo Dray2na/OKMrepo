@@ -107,10 +107,10 @@ public abstract class guiMenuNode extends guiComponent {
 
 		switch (state) {
 			case 1:
-				front = Color.BLUE;
+				front = new Color(0, 128, 255);	
 				break;
 			case 2:
-				front = Color.GREEN;	
+				front = new Color(255, 128, 0);
 				press = true;
 				break;
 			default:
@@ -175,9 +175,10 @@ public abstract class guiMenuNode extends guiComponent {
 	public void setOpen(boolean open) {
 		isOpen = open;	
 		
-		if (!open)
-		for (int i = 0; i < childs.size(); i++) {
-			childs.get(i).setOpen(open);			
+		if (!open){
+			for (int i = 0; i < childs.size(); i++) {
+				childs.get(i).setOpen(open);			
+			}
 		}
 		
 		updateChilds();			
@@ -262,11 +263,6 @@ public abstract class guiMenuNode extends guiComponent {
 	}
 	@Override
 	void onResize(ComponentEvent e) {
-		if (!isOpen) {
-			for (int i = 0; i < childs.size(); i++) {
-				childs.get(i).setBounds(getBounds());
-			}
-		}
 	}
 	@Override
 	void onMove(ComponentEvent e) {

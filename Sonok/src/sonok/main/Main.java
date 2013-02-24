@@ -31,14 +31,12 @@ public class Main {
 		guiMenuNode n2 = new guiMenuNode("User1","./data/icon/offline.png") {			
 			@Override
 			public void onClick(int button) {
-				toggle();
 				Menu.update();				
 			}
 		};
 		guiMenuNode n3 = new guiMenuNode("User2","./data/icon/offline.png") {			
 			@Override
 			public void onClick(int button) {
-				toggle();
 				Menu.update();	
 			}
 		};
@@ -49,7 +47,28 @@ public class Main {
 				Menu.update();					
 			}
 		};
-		guiMenuNode n5 = new guiMenuNode(null,null,"./data/icon/delete.png") {			
+		guiMenuNode n5 = new guiMenuNode("Profil",null,"./data/icon/export.png") {			
+			@Override
+			public void onClick(int button) {
+				toggle();
+				Menu.update();					
+			}
+		};
+		guiMenuNode n6 = new guiMenuNode("Nachricht","./data/icon/note.png") {			
+			@Override
+			public void onClick(int button) {
+				toggle();
+				Menu.update();					
+			}
+		};
+		guiMenuNode n7 = new guiMenuNode("Aufgaben","./data/icon/task.png") {			
+			@Override
+			public void onClick(int button) {
+				toggle();
+				Menu.update();					
+			}
+		};
+		guiMenuNode n8 = new guiMenuNode("Profil","./data/icon/user.png") {			
 			@Override
 			public void onClick(int button) {
 				toggle();
@@ -60,7 +79,10 @@ public class Main {
 		Menu.addChildNode(n,n2);
 		Menu.addChildNode(n,n3);
 		Menu.addChildNode(n,n4);
-		Menu.addChildNode(n,n5);
+		Menu.addChildNode(n4,n5);
+		Menu.addChildNode(n4,n6);
+		Menu.addChildNode(n4,n7);
+		Menu.addChildNode(n4,n8);
 
 		Menu.addNode(new guiMenuNode("Nachricchten","./data/icon/note.png") {			
 			@Override
