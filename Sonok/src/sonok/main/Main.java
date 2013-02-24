@@ -84,7 +84,7 @@ public class Main {
 		Menu.addChildNode(n4,n7);
 		Menu.addChildNode(n4,n8);
 
-		Menu.addNode(new guiMenuNode("Nachricchten","./data/icon/note.png") {			
+		Menu.addNode(new guiMenuNode("Nachrichten","./data/icon/note.png") {			
 			@Override
 			public void onClick(int button) {				
 			}
