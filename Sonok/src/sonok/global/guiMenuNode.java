@@ -11,19 +11,38 @@ import java.util.ArrayList;
 
 public abstract class guiMenuNode extends guiComponent {
 
-	Thread MoveDoneEvent;
 	guiMenu owner;
+	ArrayList<guiMenuNode> childs = new ArrayList<guiMenuNode>();
 	
 	Image icon;
 	Image image;
 	String caption;
-
-	ArrayList<guiMenuNode> childs = new ArrayList<guiMenuNode>();
+	
+	Thread MoveDoneEvent;
 		
 	private boolean isOpen;
 	private int state = 0;
-	private int margin = 3;
+	private int margin = 4;
+	private int elementSize = 32;
 	
+	public int getElementSize() {
+		return elementSize;
+	}
+	public void setElementSize(int size) {
+		this.elementSize = size;
+	}
+	public int getMargin() {
+		return margin;
+	}
+	public void setMargin(int margin) {
+		this.margin = margin;
+	}
+	public void setIcon(Image icon) {
+		this.icon = icon;
+	}
+	public void setImage(Image image) {
+		this.image = image;
+	}
 	//Konstruktor
 	public guiMenuNode(String cap, Image ico, Image img) {
 		super();
@@ -102,8 +121,8 @@ public abstract class guiMenuNode extends guiComponent {
 		
 		int textpos = (icon != null) ? h+10 : 10;
 		
-		Color back = getBackground();
-		Color front;
+//		Color back = getBackground();
+		Color front = getForeground();
 		boolean press = false;
 
 		switch (state) {
@@ -115,7 +134,7 @@ public abstract class guiMenuNode extends guiComponent {
 				press = true;
 				break;
 			default:
-				front = Color.BLACK;
+				front = Color.GRAY;
 				break;
 		}
 		
@@ -130,7 +149,7 @@ public abstract class guiMenuNode extends guiComponent {
 		}
 		
 		g.setFont(new Font("Arial",(state == 1) ? Font.BOLD : Font.PLAIN,h/2));
-		g.setColor(front);		
+		g.setColor(front);
 		g.drawString(caption, textpos, h / 2);	
 		if (!isOpen && childs.size() > 0) {
 			g.drawString("+"+Integer.toString(childs.size()), w-50, h);				
@@ -138,8 +157,9 @@ public abstract class guiMenuNode extends guiComponent {
 		g.draw3DRect(0, 0, w, h, !press);
 	}
 	//Methoden
+	@Deprecated
 	public int getTotalHeight() {
-		int result = 32;
+		int result = getBounds().height;
 		
 		if (isOpen) {
 			for (int i = 0; i < childs.size(); i++) {
@@ -149,49 +169,63 @@ public abstract class guiMenuNode extends guiComponent {
 		
 		return result;
 	}
-	public int update(final int childHeight) {
-		final int width = getWidth();		
-		final int cx = (int) (getX()+Math.round(width*0.05));
-		int cy = this.getHeight();
-		final int cw = (int) Math.round(width*0.95);
-		final int ch = childHeight;
-				
+	public int update(final int speed) {
+		final	int width = getBounds().width;
+		final	int y = getBounds().y;	
+		
+		final 	int cx = (int) (getBounds().x+Math.round(width*0.1));
+				int cy = getBounds().height;
+		final 	int cw = (int) Math.round(width*0.9);
+						
+		
 		for (int i = 0; i < childs.size(); i++) {
 			final guiMenuNode c = childs.get(i);
-								
-			c.moveTo(cx, this.getY() + cy, cw , ch,3);				
-			c.update();
-			
-			cy += ch;		
-		}
-		
+
+			if (this.isOpen) {
+				c.moveTo(cx, y + cy, cw , c.getElementSize(), speed);	
+				System.out.println(c.caption + "|" + c.getElementSize());
+				cy += c.update(speed);
+			} else {
+				c.moveTo(this.getBounds(),speed);	
+				c.update(speed);
+			}	
+		}			
+				
 		return cy;
 	}
 	public int update() {
-		return update(isOpen ? 32 : 0);
+		return update(3);
 	}
+	public int updateQuick() {
+		return update(-1);
+	}
+	
 	public boolean isOpen() {
 		return isOpen;		
 	}
-	public void setOpen(boolean open) {
+	private void setOpen(boolean open) {
 		isOpen = open;	
 		
 		if (!open){
 			for (int i = 0; i < childs.size(); i++) {
 				childs.get(i).setOpen(open);			
 			}
-		}
-		
-		owner.update();			
+		}		
 	}	
 	public void expand() {
 		setOpen(true);
+		
+		owner.update();	
 	}	
 	public void collapse() {
 		setOpen(false);
+		
+		owner.update();	
 	}	
 	public void toggle() {
 		setOpen(!isOpen);
+		
+		owner.update();	
 	}
 	
 	public boolean addChild(guiMenuNode e) {
@@ -283,4 +317,5 @@ public abstract class guiMenuNode extends guiComponent {
 			MoveDoneEvent.run();			
 		}
 	}
+
 }

@@ -2,7 +2,6 @@ package sonok.gui;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.BorderLayout;
 import javax.swing.JButton;

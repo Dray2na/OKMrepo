@@ -10,23 +10,30 @@ public class guiMenu extends JPanel {
 	
 	private int elementHeight = 32;
 
+	public guiMenu() {
+		super();
+	}
+	
 	public guiMenuNode addChildNode(guiMenuNode parent, guiMenuNode child){
-		parent.addChild(child);
 		this.add(child);
 		child.setVisible(true);
-		child.setBounds(0,0,elementHeight,elementHeight);
+		child.setBounds(parent.getX(),parent.getY(),elementHeight,elementHeight);
 		child.owner = this;
+		child.setElementSize(parent.getElementSize());
+		
+		parent.addChild(child);
 		
 		return child;
 	}
-	public guiMenuNode addNode(guiMenuNode e) {
-		nodes.add(e);
-		this.add(e);
-		e.setVisible(true);
-		e.setBounds(0,0,elementHeight,elementHeight);
-		e.owner = this;
-		
-		return e;
+	public guiMenuNode addNode(guiMenuNode node) {
+		this.add(node);
+		node.setVisible(true);
+		node.setBounds(0,0,elementHeight,elementHeight);
+		node.owner = this;
+
+		nodes.add(node);
+				
+		return node;
 	}
 	public void clearNodes() {
 		for (int i = 0; i < nodes.size(); i++) {
@@ -48,19 +55,24 @@ public class guiMenu extends JPanel {
 		return nodes.size();
 	}
 
-	public void update(){
+	public void update(final int speed){		
 		int c = 0;
 		final int width = getWidth();
-		
-		for (int i = 0; i < nodes.size(); i++) {
-			final guiMenuNode n = nodes.get(i);
-			n.moveTo(0, c, width, elementHeight);
-			n.MoveDoneEvent = new Thread(){
-				public void run() {
-					n.update();
-				};
-			};
-			c += n.getTotalHeight();
+				
+		for (int i = 0; i < nodes.size(); i++) {				
+			final guiMenuNode n = nodes.get(i);		
+			
+			n.moveTo(0, c, width, n.getElementSize(), speed);
+			
+			c+= n.update(speed);
 		}
+		
+		return;
+	}
+	public void update(){
+		update(3);
+	}
+	public void updateQuick(){
+		update(-1);
 	}
 }

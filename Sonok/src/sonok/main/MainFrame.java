@@ -1,11 +1,8 @@
 package sonok.main;
 
-import java.awt.Color;
 import java.awt.Rectangle;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -15,10 +12,10 @@ import javax.swing.JPanel;
 import sonok.global.CPanel;
 import sonok.global.CPanelManager;
 import sonok.global.RectangleD;
-import sonok.global.guiMenu;
+import sonok.gui.GUI_Menu;
 
 public class MainFrame extends JFrame {
-	private guiMenu menu;
+	private GUI_Menu menu;
 	private CPanelManager panelmanager =  new CPanelManager();
 	
 	final int windowheight = 600;
@@ -35,36 +32,38 @@ public class MainFrame extends JFrame {
 		
 		this.add(panelmanager);
 				
-		addComponentListener(new ComponentListener() {
+		addWindowListener(new WindowListener() {			
+			@Override
+			public void windowOpened(WindowEvent arg0) {
+			}			
+			@Override
+			public void windowIconified(WindowEvent arg0) {
+			}			
+			@Override
+			public void windowDeiconified(WindowEvent arg0) {
+			}
 			
 			@Override
-			public void componentResized(ComponentEvent e) {
-				onResize();
+			public void windowDeactivated(WindowEvent arg0) {
 			}
-
 			@Override
-			public void componentHidden(ComponentEvent arg0) {
-				// TODO Auto-generated method stub
+			public void windowClosing(WindowEvent arg0) {
+				
+				System.exit(0);
 				
 			}
-
 			@Override
-			public void componentMoved(ComponentEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
+			public void windowClosed(WindowEvent arg0) {
+			}			
 			@Override
-			public void componentShown(ComponentEvent arg0) {
-				// TODO Auto-generated method stub
-				
+			public void windowActivated(WindowEvent arg0) {
 			}
 		});
 		
 		return;
 	}
 
-	public void setMenu(guiMenu m) {
+	public void setMenu(GUI_Menu m) {
 		if (menu != null) {
 			this.remove(menu);
 		}
@@ -72,58 +71,64 @@ public class MainFrame extends JFrame {
 			this.add(m);			
 		}
 		this.menu = m;
+		
+		fitWindow();
 	}
-	public guiMenu getMenu() {
+	public GUI_Menu getMenu() {
 		return menu;
 	}
 	public void addPanel(JPanel p) {
 		this.add(p);
 		panelmanager.add(new CPanel(p));
+		fitWindow();
 	}
 	public void clearPanels() {
 		for (int i = 0; i < panelmanager.count(); i++) {
 			this.remove(panelmanager.get(i));
 		}
-		panelmanager.clear();		
+		panelmanager.clear();
+		fitWindow();		
 	}
-		
-	private void onResize() {	
+			
+	private void updateWindow(){		
 		final boolean hasMenu = (menu != null);
-		final boolean hasPanel = (panelmanager.count() > 0);
+		final boolean hasPanel = (panelmanager.count() > 0);		
+		final int width = getWidth();
+		final int height = getHeight();
+		
 		final int widthMenu;
 		final int widthPanel;
 		final int xMenu;
 		final int xPanel;
 		
 		if (hasMenu && hasPanel){
-			widthMenu = (int) Math.round(getWidth() * 0.3);
-			widthPanel = (int) Math.round(getWidth() * 0.7);
+			widthMenu = (int) Math.round(width * 0.3);
+			widthPanel = (int) Math.round(width * 0.7);
 			xMenu = 0;
-			xPanel = getWidth();
-			
-			menu.setBounds(0,0,getWidth(),getHeight());			
+			xPanel = width;	
 		} else if (hasMenu) {
-			widthMenu = getWidth();
+			widthMenu = width;
 			widthPanel = 0;
 			xMenu = 0;
-			xPanel = getWidth();
+			xPanel = width;
 		} else if (hasPanel){
 			widthMenu = 0;
-			widthPanel = getWidth();
-			xMenu = getWidth();
+			widthPanel = width;
+			xMenu = width;
 			xPanel = 0;
 		} else {
 			widthMenu = 0;
 			widthPanel = 0;
 			xMenu = 0;
-			xPanel = getWidth();
+			xPanel = width;
 		}
 		
 		if (menu != null) {				
 			if (widthMenu > 0) {
 				menu.setVisible(true);	
-				menu.setBounds(xMenu,0,widthMenu,getHeight());		
-				menu.update();
+				menu.setBounds(xMenu,0,widthMenu,height);
+				menu.updateQuick();
+				menu.repaint();
 			} else {
 				menu.setVisible(false);		
 			}
@@ -131,17 +136,32 @@ public class MainFrame extends JFrame {
 		
 		if (widthPanel > 0) {
 			panelmanager.setVisible(true);
-			panelmanager.setBounds(xPanel,0,widthPanel,getHeight());
+			panelmanager.setBounds(xPanel,0,widthPanel,height);
 			panelmanager.repaint();
 		} else {	
 			panelmanager.setVisible(false);
 		}
 	}
 
-	private void updateWindow() {
-		if (true) {
-			//TODO menu aktiv / panel aktiv größe =...
-		}
+	private void fitWindow() {
+		final boolean hasMenu = (menu != null);
+		final boolean hasPanel = (panelmanager.count() > 0);
+		final int x,y,w,h;
+		x = getX();
+		y = getY();
+		h = 600;
+		
+		if (hasMenu && hasPanel) {
+			w = 800;
+		} else if (hasPanel) {
+			w = 550;
+		} else if (hasMenu) {
+			w = 250;
+		} else {
+			w = 100;
+		}		
+		
+		moveTo(x,y,w,h);
 	}
 //==========================================================================================
 //Bounce Fenster, Bounce!
@@ -183,9 +203,12 @@ public class MainFrame extends JFrame {
 					Math.abs(curbounds.h-tarbounds.h)<=1 )
 				{	
 					setBounds(tarbounds.getRectangle());
+					updateWindow();
 					cancel();
+					
+					return;
 				} else {
-					setBounds(curbounds.getRectangle());	
+					setBounds(curbounds.getRectangle());
 				}
 			}
 		}, 0, 10);

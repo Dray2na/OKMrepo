@@ -1,5 +1,7 @@
 package sonok.main;
 
+import java.awt.Color;
+
 import javax.swing.JPanel;
 
 import sonok.global.guiMenuNode;
@@ -17,82 +19,86 @@ public class Main {
 	}
 	
 	private static void Init() {
-		Frame.setBounds(200, 200, 200, 500);
+		//Frame.setBounds(200, 200, 200, 500);
 		Frame.setMenu(Menu);
-		Frame.addPanel(new GUI_LogIn());
 
-		guiMenuNode n = new guiMenuNode("Benutzer","./data/icon/user.png") {			
+		Menu.AddEntry("Menu",null).setElementSize(48);
+		Menu.AddEntry("Mister Mustermann","db",null).setElementSize(24);
+		
+		guiMenuNode freunde = Menu.addNode(new guiMenuNode("Freunde","./data/icon/user.png") {			
 			@Override
 			public void onClick(int button) {
+				if (isOpen()) {
+					setElementSize(32);
+				} else {
+					setElementSize(24);
+				}
 				toggle();
 			}
-		};
-		guiMenuNode n2 = new guiMenuNode("User1","./data/icon/offline.png") {			
-			@Override
-			public void onClick(int button) {
-				setOpen(true);
-			}
-		};
-		guiMenuNode n3 = new guiMenuNode("User2","./data/icon/offline.png") {			
+		});
+		guiMenuNode user1 = Menu.addChildNode(freunde,new guiMenuNode("User 1","./data/icon/offline.png") {			
 			@Override
 			public void onClick(int button) {
 			}
-		};
-		guiMenuNode n4 = new guiMenuNode("User3","./data/icon/user.png") {			
+		});
+		guiMenuNode user2 = Menu.addChildNode(freunde,new guiMenuNode("User 2","./data/icon/offline.png") {			
 			@Override
 			public void onClick(int button) {
-				toggle();			
 			}
-		};
-		guiMenuNode n5 = new guiMenuNode("Profil",null,"./data/icon/export.png") {			
+		});
+		guiMenuNode user3 = Menu.addChildNode(freunde,new guiMenuNode("User 3","./data/icon/user.png") {			
 			@Override
 			public void onClick(int button) {
-				toggle();				
+				if (isOpen()) {
+					setElementSize(32);
+				} else {
+					setElementSize(24);
+				}
+				toggle();
 			}
-		};
-		guiMenuNode n6 = new guiMenuNode("Nachricht","./data/icon/note.png") {			
+		});
+		guiMenuNode user4 = Menu.addChildNode(freunde,new guiMenuNode("User 4","./data/icon/offline.png") {			
 			@Override
 			public void onClick(int button) {
-				toggle();				
 			}
-		};
-		guiMenuNode n7 = new guiMenuNode("Aufgaben","./data/icon/task.png") {			
-			@Override
-			public void onClick(int button) {
-				toggle();					
-			}
-		};
-		guiMenuNode n8 = new guiMenuNode("Profil","./data/icon/user.png") {			
-			@Override
-			public void onClick(int button) {
-				toggle();				
-			}
-		};
+		});
 		
-		Menu.addNode(n);
-		Menu.addChildNode(n,n2);
-		Menu.addChildNode(n,n3);
-		Menu.addChildNode(n,n4);
-		Menu.addChildNode(n4,n5);
-		Menu.addChildNode(n4,n6);
-		Menu.addChildNode(n4,n7);
-		Menu.addChildNode(n4,n8);
-		Menu.addNode(new guiMenuNode("Nachrichten","./data/icon/note.png") {			
-			@Override
-			public void onClick(int button) {				
-			}
-		});
-		Menu.addNode(new guiMenuNode("Web","./data/icon/browser.png") {			
-			@Override
-			public void onClick(int button) {				
-			}
-		});
-		Menu.addNode(new guiMenuNode("Aufgaben","./data/icon/task.png") {			
+		guiMenuNode profil = Menu.addChildNode(user3, new guiMenuNode("Profil","./data/icon/user.png") {
 			@Override
 			public void onClick(int button) {				
 			}
 		});
 		
-		Menu.update();
+		guiMenuNode nachricht = Menu.addChildNode(user3, new guiMenuNode("Nachricht","./data/icon/note.png") {
+			@Override
+			public void onClick(int button) {				
+			}
+		});
+		
+		guiMenuNode add = Menu.addChildNode(user3, new guiMenuNode("Hinzufügen","./data/icon/add.png") {
+			@Override
+			public void onClick(int button) {				
+			}
+		});
+
+
+		Menu.AddEntry("Panel+","add", new Thread(){
+			@Override
+			public void run() {
+				Frame.addPanel(new GUI_LogIn());
+			}
+		});
+		Menu.AddEntry("Panel-","delete", new Thread(){
+			@Override
+			public void run() {
+				Frame.addPanel(new GUI_LogIn());
+			}
+		});		
+		Menu.AddEntry("Schließen","close", new Thread(){
+			@Override
+			public void run() {
+				System.exit(0);
+			}
+		});
 	}	
 }
