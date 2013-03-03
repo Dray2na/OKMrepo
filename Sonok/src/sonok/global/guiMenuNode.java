@@ -16,7 +16,6 @@ public abstract class guiMenuNode extends guiComponent {
 
 	guiMenu owner;
 	private ArrayList<guiMenuNode> childs = new ArrayList<guiMenuNode>();
-
 	private String caption;
 	Image icon;
 	Image image;
@@ -144,6 +143,7 @@ public abstract class guiMenuNode extends guiComponent {
 		image = null;
 		caption = "";
 	}
+	
 	//Event
 	public abstract void onClick(int button);	
 	//Grafik
