@@ -4,9 +4,12 @@ import javax.swing.JPanel;
 
 import sonok.interfaces.SqlObject;
 import javax.swing.JTextField;
+
+import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.Random;
 
 public class GUI_LogIn extends JPanel implements SqlObject {
 	private JTextField textField;
@@ -41,6 +44,11 @@ public class GUI_LogIn extends JPanel implements SqlObject {
 		add(textField, gbc_textField);
 		textField.setColumns(10);
 
+		final Random random = new Random();
+		final int r = random.nextInt(256);
+		final int g = random.nextInt(256);
+		final int b = random.nextInt(256);
+		setBackground(new Color(r,g,b));
 	}
 
 	@Override

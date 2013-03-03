@@ -1,6 +1,12 @@
 package sonok.main;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Timer;
@@ -12,21 +18,18 @@ import javax.swing.JPanel;
 import sonok.global.CPanel;
 import sonok.global.CPanelManager;
 import sonok.global.RectangleD;
+import sonok.global.guiMenuNode;
 import sonok.gui.GUI_Menu;
 
 public class MainFrame extends JFrame {
 	private GUI_Menu menu;
 	private CPanelManager panelmanager =  new CPanelManager();
-	
-	final int windowheight = 600;
-	final int windowwidth = 800;
-	
+		
 	public MainFrame() {
 		Init();
 	}
 	
 	private void Init() {
-		setBounds(0,0,0,800);
 		setVisible(true);
 		setLayout(null);
 		
@@ -70,17 +73,27 @@ public class MainFrame extends JFrame {
 		if (m != null) {
 			this.add(m);			
 		}
-		this.menu = m;
-		
+		this.menu = m;		
+				
 		fitWindow();
 	}
 	public GUI_Menu getMenu() {
 		return menu;
 	}
-	public void addPanel(JPanel p) {
-		this.add(p);
-		panelmanager.add(new CPanel(p));
-		fitWindow();
+	public JPanel addPanel(JPanel p, guiMenuNode n) {
+		boolean firstadd = (panelmanager.count() == 0);
+		
+		//TODO Doppeltes Hinzufügen vermeiden!
+		
+		panelmanager.add(new CPanel(p,n));
+		
+		if (firstadd)
+			fitWindow();
+		
+		return p;
+	}	
+	public JPanel addPanel(JPanel p) {
+		return addPanel(p, null);
 	}
 	public void clearPanels() {
 		for (int i = 0; i < panelmanager.count(); i++) {
@@ -105,7 +118,7 @@ public class MainFrame extends JFrame {
 			widthMenu = (int) Math.round(width * 0.3);
 			widthPanel = (int) Math.round(width * 0.7);
 			xMenu = 0;
-			xPanel = width;	
+			xPanel = widthMenu;	
 		} else if (hasMenu) {
 			widthMenu = width;
 			widthPanel = 0;
@@ -144,24 +157,31 @@ public class MainFrame extends JFrame {
 	}
 
 	private void fitWindow() {
+		final Dimension Screen = Toolkit.getDefaultToolkit().getScreenSize();
 		final boolean hasMenu = (menu != null);
 		final boolean hasPanel = (panelmanager.count() > 0);
 		final int x,y,w,h;
-		x = getX();
-		y = getY();
-		h = 600;
+		x = 10;
 		
 		if (hasMenu && hasPanel) {
 			w = 800;
+			y = Screen.height / 2 - 300;
+			h = 600;
 		} else if (hasPanel) {
 			w = 550;
+			h = 600;
+			y = Screen.height / 2 - 300;
 		} else if (hasMenu) {
 			w = 250;
+			y = Screen.height / 2 - 300; // menu.getTotalHeight() / 2;
+			h = 600; //menu.getTotalHeight();
 		} else {
 			w = 100;
+			y = Screen.height / 2 - 300; // menu.getTotalHeight() / 2;
+			h = 600; //menu.getTotalHeight();
 		}		
-		
-		moveTo(x,y,w,h);
+
+		moveTo(x,y,w,h,0);
 	}
 //==========================================================================================
 //Bounce Fenster, Bounce!
@@ -197,10 +217,16 @@ public class MainFrame extends JFrame {
 				curbounds.add(movbounds);
 				
 			  //Wenn abstand <= 1 dann ende				
-				if (Math.abs(curbounds.x-tarbounds.x)<=1 &&
-					Math.abs(curbounds.y-tarbounds.y)<=1 &&
-					Math.abs(curbounds.w-tarbounds.w)<=1 &&
-					Math.abs(curbounds.h-tarbounds.h)<=1 )
+				if ((acceleration < 0) ||
+						((Math.abs(curbounds.x-tarbounds.x)<=1 &&
+						 Math.abs(curbounds.y-tarbounds.y)<=1 &&
+						 Math.abs(curbounds.w-tarbounds.w)<=1 &&
+						 Math.abs(curbounds.h-tarbounds.h)<=1 ) && 
+						 (Math.abs(spdbounds.x)<=1 &&
+						 Math.abs(spdbounds.y)<=1 &&
+						 Math.abs(spdbounds.w)<=1 &&
+						 Math.abs(spdbounds.h)<=1 ))
+						)
 				{	
 					setBounds(tarbounds.getRectangle());
 					updateWindow();

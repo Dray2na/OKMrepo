@@ -2,34 +2,50 @@ package sonok.global;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class guiMenuNode extends guiComponent {
 
 	guiMenu owner;
-	ArrayList<guiMenuNode> childs = new ArrayList<guiMenuNode>();
-	
+	private ArrayList<guiMenuNode> childs = new ArrayList<guiMenuNode>();
+
+	private String caption;
 	Image icon;
 	Image image;
-	String caption;
 	
 	Thread MoveDoneEvent;
 		
-	private boolean isOpen;
+	private boolean isOpen = false;
+	private boolean isActive = true;
+	private TimerTask Scroll = null;
+	
 	private int state = 0;
 	private int margin = 4;
-	private int elementSize = 32;
+	private int openSize = 32;
+	private int defaultSize = 32;	
+	private int textWidth = 0;
+	private int textpos;
 	
 	public int getElementSize() {
-		return elementSize;
+		return isOpen ? openSize : defaultSize;
 	}
 	public void setElementSize(int size) {
-		this.elementSize = size;
+		this.defaultSize = size;
+		this.openSize = size;
+	}
+	public void setDefaultSize(int size) {
+		this.defaultSize = size;
+	}
+	public void setOpenSize(int size) {
+		this.openSize = size;
 	}
 	public int getMargin() {
 		return margin;
@@ -47,11 +63,12 @@ public abstract class guiMenuNode extends guiComponent {
 	public guiMenuNode(String cap, Image ico, Image img) {
 		super();
 
+		setForeground(Color.DARK_GRAY);
 
 		if (cap != null)
-			caption = cap;
+			setCaption(cap);
 		else
-			caption = "";
+			setCaption("");
 		image = img;
 		icon = ico;
 
@@ -59,18 +76,28 @@ public abstract class guiMenuNode extends guiComponent {
 	public guiMenuNode(String cap, String ico, String img) {
 		super();
 
+		setForeground(Color.DARK_GRAY);
+
 		if (cap != null)
 			caption = cap;
 		else
-			caption = "";
+			setCaption("");
 		
 		if ((img != null) && (img != ""))
-			image = new CImage(img).getImage();
+			try {
+				image = new CImage(img).getImage();
+			} catch (Exception e) {
+				image = null;
+			}
 		else
 			image = null;
 			
 		if ((ico != null) && (ico != ""))
-			icon = new CImage(ico).getImage();
+			try {
+				icon = new CImage(ico).getImage();
+			} catch (Exception e) {
+				icon = null;
+			}
 		else
 			icon = null;
 
@@ -78,17 +105,21 @@ public abstract class guiMenuNode extends guiComponent {
 	public guiMenuNode(String cap, Image ico) {
 		super();
 
+		setForeground(Color.DARK_GRAY);
+
 		image = null;
 		icon = ico;
-		caption = cap;
+		setCaption(cap);
 	}
 	public guiMenuNode(String cap, String ico) {
-		super();		
+		super();
+
+		setForeground(Color.DARK_GRAY);		
 
 		if (cap != null)
-			caption = cap;
+			setCaption(cap);
 		else
-			caption = "";
+			setCaption("");
 		image = null;
 		if ((ico != null) && (ico != ""))
 			icon = new CImage(ico).getImage();
@@ -98,12 +129,16 @@ public abstract class guiMenuNode extends guiComponent {
 	public guiMenuNode(String cap){
 		super();
 
+		setForeground(Color.DARK_GRAY);
+
 		icon = null;
 		image = null;
-		caption = cap;
+		setCaption(cap);
 	}
 	public guiMenuNode() {
 		super();
+
+		setForeground(Color.DARK_GRAY);
 
 		icon = null;
 		image = null;
@@ -118,48 +153,51 @@ public abstract class guiMenuNode extends guiComponent {
 	 //init	
 		int w = getWidth()-1;
 		int h = getHeight()-1;
-		
-		int textpos = (icon != null) ? h+10 : 10;
-		
-//		Color back = getBackground();
-		Color front = getForeground();
+				
+		final Color color;
 		boolean press = false;
 
 		switch (state) {
 			case 1:
-				front = new Color(0, 128, 255);	
+				color = new Color(0, 128, 255);	
 				break;
 			case 2:
-				front = new Color(255, 128, 0);
+				color = new Color(255, 128, 0);
 				press = true;
 				break;
 			default:
-				front = Color.GRAY;
+				color = getForeground();
 				break;
 		}
 		
 	 //draw
+		
+		g.setColor(color);
+				
+		if (isActive) {	
 
-		if (image != null) {
-			g.drawImage(image, 0, 0, w, h, null);			
+			if (image != null) {
+				g.drawImage(image, 0, 0, w, h, null);			
+			}
+			
+			g.setFont(getFont());
+			g.drawString(caption, textpos,(int) Math.round(h * 0.6));		
+			
+			if (!isOpen && childs.size() > 0) {
+				g.drawString("+"+Integer.toString(childs.size()), w-50, h);				
+			}	
+			
+			if (icon != null) {
+				g.drawImage(icon, margin, margin, h-margin*2, h-margin*2, null);
+			}
 		}
-		
-		if (icon != null) {
-			g.drawImage(icon, margin, margin, h-margin*2, h-margin*2, null);
-		}
-		
-		g.setFont(new Font("Arial",(state == 1) ? Font.BOLD : Font.PLAIN,h/2));
-		g.setColor(front);
-		g.drawString(caption, textpos, h / 2);	
-		if (!isOpen && childs.size() > 0) {
-			g.drawString("+"+Integer.toString(childs.size()), w-50, h);				
-		}	
+
 		g.draw3DRect(0, 0, w, h, !press);
 	}
 	//Methoden
 	@Deprecated
 	public int getTotalHeight() {
-		int result = getBounds().height;
+		int result = getElementSize();
 		
 		if (isOpen) {
 			for (int i = 0; i < childs.size(); i++) {
@@ -169,27 +207,63 @@ public abstract class guiMenuNode extends guiComponent {
 		
 		return result;
 	}
+	
+	private void updateElement() {
+		final boolean scrolls = (textWidth > getBounds().width - ((icon != null) ? getElementSize()+10 : 0));	
+		
+		if (isActive && (Scroll == null) && scrolls){
+			textpos = (icon != null) ? getElementSize()+10 : 10;
+			Scroll = new TimerTask() {
+				
+				@Override
+				public void run() {
+					textpos -= 2;
+					repaint();
+					
+					if (textpos <= -textWidth) {
+						Scroll = null;
+						update();
+						cancel();
+					}
+				}
+			};
+			
+			new Timer(true).scheduleAtFixedRate(Scroll, 3000, 20);
+		} else if (Scroll == null){
+			textpos = (icon != null) ? getElementSize()+10 : 10;
+		}
+		
+	}
+	
 	public int update(final int speed) {
 		final	int width = getBounds().width;
-		final	int y = getBounds().y;	
-		
+		final	int y = getBounds().y;			
 		final 	int cx = (int) (getBounds().x+Math.round(width*0.1));
 				int cy = getBounds().height;
 		final 	int cw = (int) Math.round(width*0.9);
-						
 		
 		for (int i = 0; i < childs.size(); i++) {
 			final guiMenuNode c = childs.get(i);
 
-			if (this.isOpen) {
+			if (isOpen) {
 				c.moveTo(cx, y + cy, cw , c.getElementSize(), speed);	
-				System.out.println(c.caption + "|" + c.getElementSize());
 				cy += c.update(speed);
+				c.setActive(true);
 			} else {
 				c.moveTo(this.getBounds(),speed);	
 				c.update(speed);
+				c.MoveDoneEvent = new Thread(){
+					@Override
+					public void run() {
+						super.run();
+
+						c.setActive(false);
+					};
+				};
 			}	
-		}			
+		}	
+		
+		updateElement();
 				
 		return cy;
 	}
@@ -198,6 +272,20 @@ public abstract class guiMenuNode extends guiComponent {
 	}
 	public int updateQuick() {
 		return update(-1);
+	}
+	
+	public void setCaption(String caption) {
+		this.caption = caption;
+		final FontMetrics fontMetrics = getFontMetrics(getFont());
+		textWidth = fontMetrics.stringWidth(caption);
+	}
+	public String getCaption() {
+		return caption;
+	}
+	
+	@Override
+	public Font getFont() {
+		return new Font("Arial",(state == 1) ? Font.BOLD : Font.PLAIN,getElementSize()/2);
 	}
 	
 	public boolean isOpen() {
@@ -226,6 +314,24 @@ public abstract class guiMenuNode extends guiComponent {
 		setOpen(!isOpen);
 		
 		owner.update();	
+	}
+	
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+		if (isActive) {
+			//setVisible(true);
+			updateElement();
+		} else {
+			//setVisible(false);
+			if (Scroll != null) {
+				Scroll.cancel();
+				updateElement();
+				Scroll = null;
+			}
+		}
+	}
+	public boolean isActive() {
+		return isActive;
 	}
 	
 	public boolean addChild(guiMenuNode e) {
@@ -314,7 +420,8 @@ public abstract class guiMenuNode extends guiComponent {
 	@Override
 	void onMoveDone() {
 		if (MoveDoneEvent != null) {
-			MoveDoneEvent.run();			
+			MoveDoneEvent.run();	
+			MoveDoneEvent = null;
 		}
 	}
 

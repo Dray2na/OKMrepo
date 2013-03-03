@@ -1,5 +1,6 @@
 package sonok.global;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 
 import javax.swing.JPanel;
@@ -10,11 +11,21 @@ public class CPanel {
 	private RectangleD tarbounds;
 	private RectangleD spdbounds;
 	
+	private guiMenuNode menunode = null;
+
 	public CPanel(JPanel p) {
 		panel = p;	
 		curbounds = new RectangleD(p.getBounds());
 		tarbounds = null;
 		spdbounds = new RectangleD();
+	}
+	public CPanel(JPanel p, guiMenuNode n) {
+		panel = p;	
+		curbounds = new RectangleD(p.getBounds());
+		tarbounds = null;
+		spdbounds = new RectangleD();
+		
+		menunode = n;
 	}
 	
 
@@ -29,7 +40,8 @@ public class CPanel {
 		return panel;
 	}
 	
-	public void Update(final int acceleration) {
+	public boolean Update(final int acceleration) {
+		boolean result = true;
 		
 		if (tarbounds != null) {
 			  //Geschwindigkeitsvektoren
@@ -43,10 +55,10 @@ public class CPanel {
 				
 			  //Bewegungsvektoren
 				RectangleD movbounds = new RectangleD(
-					(tarbounds.x - curbounds.x) / 20,
-					(tarbounds.y - curbounds.y) / 20,
-					(tarbounds.w - curbounds.w) / 20,
-					(tarbounds.h - curbounds.h) / 20
+					(tarbounds.x - curbounds.x) / 10,
+					(tarbounds.y - curbounds.y) / 10,
+					(tarbounds.w - curbounds.w) / 10,
+					(tarbounds.h - curbounds.h) / 10
 				);
 				movbounds.add(spdbounds);
 								
@@ -54,16 +66,39 @@ public class CPanel {
 				curbounds.add(movbounds);
 				
 			  //Wenn abstand <= 1 dann ende				
-				if (Math.abs(curbounds.x-tarbounds.x)<=1 &&
-					Math.abs(curbounds.y-tarbounds.y)<=1 &&
-					Math.abs(curbounds.w-tarbounds.w)<=1 &&
-					Math.abs(curbounds.h-tarbounds.h)<=1 )
+				if ((acceleration < 0) ||
+						((Math.abs(curbounds.x-tarbounds.x)<=1 &&
+						 Math.abs(curbounds.y-tarbounds.y)<=1 &&
+						 Math.abs(curbounds.w-tarbounds.w)<=1 &&
+						 Math.abs(curbounds.h-tarbounds.h)<=1 ) && 
+						 (Math.abs(spdbounds.x)<=1 &&
+						 Math.abs(spdbounds.y)<=1 &&
+						 Math.abs(spdbounds.w)<=1 &&
+						 Math.abs(spdbounds.h)<=1 ))
+						)
 				{	
 					panel.setBounds(tarbounds.getRectangle());
 					tarbounds = null;
+					result = false;
 				} else {
 					panel.setBounds(curbounds.getRectangle());	
 				}
 		}
+
+		panel.repaint();
+		
+		return result;
+	}
+
+	public Point getPosInMenu() {
+		final Point p;
+		
+		if (menunode != null) {
+			p = new Point(menunode.getY(), menunode.getY()+menunode.getHeight());
+		} else {
+			p = new Point(0, 0);
+		}
+		
+		return p;
 	}
 }
