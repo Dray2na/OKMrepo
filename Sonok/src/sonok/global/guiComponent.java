@@ -18,6 +18,8 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 abstract class guiComponent extends JPanel {
+	private TimerTask move = null;
+	private static RectangleD tarbounds = null;
   //Constructor
 	public guiComponent() {
 		Init();
@@ -34,10 +36,18 @@ abstract class guiComponent extends JPanel {
 		        onMouseDown(e);
 		      }
 		      
+			  @Override
+			  public void mouseReleased(MouseEvent e)
+			  {
+			    onMouseUp(e);
+			  }
 		      @Override
-		      public void mouseReleased(MouseEvent e)
-		      {
-		        onMouseUp(e);
+			  public void mouseEntered(MouseEvent e) {
+		    	  onMouseEntered(e);
+			  }
+		      @Override
+		      public void mouseExited(MouseEvent e) {
+		    	onMouseExited(e);
 		      }
 		    });
 	    addMouseMotionListener(new MouseMotionListener() {  
@@ -95,6 +105,8 @@ abstract class guiComponent extends JPanel {
   //Input-Events
 	abstract void onMouseDown(MouseEvent e);
 	abstract void onMouseUp(MouseEvent e);
+	abstract void onMouseEntered(MouseEvent e);
+	abstract void onMouseExited(MouseEvent e);
 	abstract void onMouseMove(MouseEvent e);
 	abstract void onMouseDrag(MouseEvent e);
 	abstract void onMouseWheel(MouseEvent e);
@@ -106,61 +118,87 @@ abstract class guiComponent extends JPanel {
 	abstract void onMove(ComponentEvent e);
 	abstract void onShow(ComponentEvent e);
 	abstract void onHide(ComponentEvent e);
-  //Object-Events
-	abstract void doMove();
-	abstract void doDraw();
+	abstract void onMoveDone();
   //Getter & Setter
-	public void moveTo(final Rectangle Bounds, final int acceleration) {		
-		new Timer(true).scheduleAtFixedRate(new TimerTask() {
+	public void moveTo(final Rectangle Bounds, final int acceleration) {
+		if (move != null) {
+			move.cancel();
+		}
+		final RectangleD target = new RectangleD(Bounds);		
+		tarbounds = target;
+		
+		move = new TimerTask() {
 			RectangleD curbounds = new RectangleD(getBounds());
-			RectangleD tarbounds = new RectangleD(Bounds);
 			RectangleD spdbounds = new RectangleD();
+			RectangleD tarbounds = target;
 			
 			@Override
-			public void run() {
-			  //Geschwindigkeitsvektoren
-				RectangleD accbounds = new RectangleD(
-					(tarbounds.x - curbounds.x) * acceleration / 1000,
-					(tarbounds.y - curbounds.y) * acceleration / 1000,
-					(tarbounds.w - curbounds.w) * acceleration / 1000,
-					(tarbounds.h - curbounds.h) * acceleration / 1000
-				);
-				spdbounds.add(accbounds);
-				
-			  //Bewegungsvektoren
-				RectangleD movbounds = new RectangleD(
-					(tarbounds.x - curbounds.x) / 20,
-					(tarbounds.y - curbounds.y) / 20,
-					(tarbounds.w - curbounds.w) / 20,
-					(tarbounds.h - curbounds.h) / 20
-				);
-				movbounds.add(spdbounds);
-								
-			  //Neue pos setzen
-				curbounds.add(movbounds);
-				
-			  //Wenn abstand <= 1 dann ende				
-				if (Math.abs(curbounds.x-tarbounds.x)<=1 &&
-					Math.abs(curbounds.y-tarbounds.y)<=1 &&
-					Math.abs(curbounds.w-tarbounds.w)<=1 &&
-					Math.abs(curbounds.h-tarbounds.h)<=1 )
+			public void run() {		
+			  //wenn Beschleunigung < 0 oder	
+			  //Geschwindigkeit und Abstand <= 1	
+			  //dann ende.
+				if ((acceleration < 0) ||
+					((Math.abs(curbounds.x-tarbounds.x)<=1 &&
+					 Math.abs(curbounds.y-tarbounds.y)<=1 &&
+					 Math.abs(curbounds.w-tarbounds.w)<=1 &&
+					 Math.abs(curbounds.h-tarbounds.h)<=1 ) && 
+					 (Math.abs(spdbounds.x)<=1 &&
+					 Math.abs(spdbounds.y)<=1 &&
+					 Math.abs(spdbounds.w)<=1 &&
+					 Math.abs(spdbounds.h)<=1 ))
+					)
 				{	
-					setBounds(tarbounds.getRectangle());			
+					setBounds(tarbounds.getRectangle());	
+					onMoveDone();
 					cancel();
-				} else {
+					move = null;
+
+					return;
+				} else {	
+				  //Beschleunigung
+					RectangleD accbounds = new RectangleD(
+						(tarbounds.x - curbounds.x) * acceleration / 1000,
+						(tarbounds.y - curbounds.y) * acceleration / 1000,
+						(tarbounds.w - curbounds.w) * acceleration / 1000,
+						(tarbounds.h - curbounds.h) * acceleration / 1000
+					);
+					spdbounds.add(accbounds);
+				  //Verschiebung
+					RectangleD movbounds = new RectangleD(
+						(tarbounds.x - curbounds.x) / 20,
+						(tarbounds.y - curbounds.y) / 20,
+						(tarbounds.w - curbounds.w) / 20,
+						(tarbounds.h - curbounds.h) / 20
+					);
+					movbounds.add(spdbounds);									
+					curbounds.add(movbounds);					
+				  //Pos Aktualisieren
 					setBounds(curbounds.getRectangle());	
 				}
 			}
-		}, 0, 10);
+		};
+		//TODO	100 sollte 0 sein (verzögerung bis anfang)
+		//		aber die Verzögerung verhindert dass die
+		//		Elemente verschwinden
+		new Timer(true).scheduleAtFixedRate(move, 100, 10);
 	}
 	public void moveTo(int x, int y, int w, int h, int acceleration) {
 		moveTo(new Rectangle(x,y,w,h),acceleration);
 	}
 	public void moveTo(int x, int y, int w, int h) {
-		moveTo(new Rectangle(x,y,w,h));
-		
+		moveTo(new Rectangle(x,y,w,h));		
 	}
 	public void moveTo(final Rectangle Bounds) {
 		moveTo(Bounds,5);
+	}
+	
+//Overrides
+	@Override
+	public Rectangle getBounds() {
+		if (move != null) {
+			return tarbounds.getRectangle();
+		} else {
+			return super.getBounds();
+		}
 	}
 }
