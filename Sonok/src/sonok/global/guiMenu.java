@@ -118,9 +118,13 @@ public class guiMenu extends JPanel {
 	}
 	public void update(){
 		update(3);
+		
+		return;
 	}
 	public void updateQuick(){
 		update(-1);
+		
+		return;
 	}
 	public int getTotalHeight(){
 		int h = 0;

@@ -123,6 +123,7 @@ abstract class guiComponent extends JPanel {
 	public void moveTo(final Rectangle Bounds, final int acceleration) {
 		if (move != null) {
 			move.cancel();
+			onMoveDone();
 		}
 		final RectangleD target = new RectangleD(Bounds);		
 		tarbounds = target;
@@ -179,8 +180,8 @@ abstract class guiComponent extends JPanel {
 		};
 		//TODO	100 sollte 0 sein (verzögerung bis anfang)
 		//		aber die Verzögerung verhindert dass die
-		//		Elemente verschwinden
-		new Timer(true).scheduleAtFixedRate(move, 100, 10);
+		//		Elemente verschwinden		
+			new Timer(true).scheduleAtFixedRate(move, 100, 10);
 	}
 	public void moveTo(int x, int y, int w, int h, int acceleration) {
 		moveTo(new Rectangle(x,y,w,h),acceleration);

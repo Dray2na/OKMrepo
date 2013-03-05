@@ -18,6 +18,8 @@ public class CPanelManager extends JPanel {
 	private int scroll = 0;
 	private int maxScroll = 0;
 	private int minScroll = 0;
+	
+	private TimerTask move = null;
 
 	public CPanelManager() {
 		setBackground(Color.BLACK);
@@ -27,16 +29,9 @@ public class CPanelManager extends JPanel {
 		addMouseWheelListener(new MouseWheelListener() {			
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
-				Scroll(e.getWheelRotation()*25);
+				Scroll(e.getWheelRotation()*50);
 			}
 		});
-		//TODO Stop
-		new Timer(true).scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				Move();
-			}
-		},1000,25);
 	}
 	
 	@Override
@@ -75,63 +70,120 @@ public class CPanelManager extends JPanel {
 		}
 	}
 	
-	private void Move() {
-		for (int i = 0; i < panels.size(); i++) {
-			panels.get(i).Update(3);
+	private void Move() {		
+		if (move != null) {
+			move.cancel();
 		}
-		repaint();
+		
+		move = new TimerTask() {
+
+			@Override
+			public void run() {			
+				boolean moving = false;
+
+				for (int i = 0; i < panels.size(); i++) {
+					if (panels.get(i).Update(3)) moving = true;
+				}
+				repaint();
+	
+				if (!moving) {
+					cancel();
+					move = null;
+				}
+			}
+		};
+		
+		new Timer(true).scheduleAtFixedRate(move,25,25);		
 	}
 	public void Update() {
 		final int x = 50;
 		int y = -scroll;
 		final int w = 500;
-		final int h = w;
+		int height = 0;
 		
 		if (panels.size()>0) {					
 			for (int i = 0; i < panels.size(); i++) {
+				final int h = w;
+				
 				panels.get(i).setTarget(x, y, w, h);
 				y += h;
+				height += h;				
 			}			
 		}
 		
-		maxScroll = 0;
-		minScroll = -y;
+		maxScroll = height - getHeight() +50;
+		minScroll = -10;
+		
+		return;
 	}
 
-	public void add(final CPanel e) {
-		this.add(e.getPanel());
-		Update();
+	private void addPanel(final CPanel e) {
+		this.add(e.getPanel());		
 		panels.add(e);
+		
+		Update();
+		
+		Move();
+		
+		return;
 	}
-	public void clear() {
+	public void addPanel(final JPanel p) {
+		addPanel(new CPanel(p));
+	}
+	public void addPanel(final JPanel p, final guiMenuNode n) {
+		addPanel(new CPanel(p,n));
+	}
+	public void clearPanels() {
 		for (int i = 0; i < panels.size(); i++) {
 			remove(panels.get(i).getPanel());
 		}
 		panels.clear();
+		scroll = 0;
+		
 		repaint();
 	}
 	
-	public JPanel get(int index) {
+	public JPanel getPanel(int index) {
 		return panels.get(index).getPanel();
 	}
-	public int indexOf(Object o) {
-		return panels.indexOf(o);
+	public boolean hasPanel() {
+		return !panels.isEmpty();
 	}
-	public boolean isEmpty() {
-		return panels.isEmpty();
+	public void removePanel(JPanel o) {
+		for (int i = 0; i < panels.size(); i++) {
+			final JPanel p = panels.get(i).getPanel();
+			
+			if (p == o) {
+				this.remove(p);				
+				panels.remove(i);
+			}
+		}
+		
+		Update();
+
+		Move();
+	}	
+	public void removePanel(guiMenuNode o) {
+		for (int i = 0; i < panels.size(); i++) {
+			final guiMenuNode n = panels.get(i).getNode();
+			final JPanel p = panels.get(i).getPanel();
+			
+			if (n == o) {
+				this.remove(p);
+				panels.remove(i);
+			}
+		}		
+		
+		Update();
+
+		Move();
 	}
-	public void removePanel(int index) {
-		panels.remove(index);
-	}
-	public boolean removePanel(Object o) {
-		return panels.remove(o);
-	}
-	public int count() {
+	public int PanelCount() {
 		return panels.size();
 	}
 
-	public void Scroll(int scroll) {
-		this.scroll += scroll;
+	public void Scroll(int Scroll) {
+		scroll += Scroll;
 		
 		if (scroll < minScroll) {
 			scroll = minScroll;
@@ -140,6 +192,8 @@ public class CPanelManager extends JPanel {
 		}
 		
 		Update();
+		
+		Move();
 	}
 }
 

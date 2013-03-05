@@ -1,12 +1,8 @@
 package sonok.gui;
 
 import java.awt.Color;
-import java.awt.Image;
-
-import sonok.global.CImage;
 import sonok.global.guiMenu;
 import sonok.global.guiMenuNode;
-import java.lang.Thread;
 
 public class GUI_Menu extends guiMenu {
 		

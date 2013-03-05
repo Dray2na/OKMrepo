@@ -10,6 +10,8 @@ import sonok.global.guiMenuNode;
 import sonok.gui.GUI_LogIn;
 import sonok.gui.GUI_Menu;
 import sonok.gui.GUI_Menu_Entry;
+import sonok.gui.GUI_Wiki;
+import sonok.gui.GUI_Wiki_Edit;
 	
 public class Main {
 	public static ContentManager Manager;
@@ -34,8 +36,7 @@ public class Main {
 		
 //		Lest euch bitte mal die Funktion durch
 		makeMenu_Mit_Kommentaren();
-//		Danach könnt ihr 
-//		
+//		Danach könnt ihr die benutzen
 		//makeMenu();
 	}
 	
@@ -99,15 +100,31 @@ public class Main {
 		
 			Menu.addEntryChild(freunde, new GUI_Menu_Entry("User 4", "offline", 28, null));
 		
-//		Hier noch ein Beispiel: Wenn die Beschriftung eines Menüpunktes zu breit
-//		für die Anzeige ist, fängt er nach wenigen Sekunden automatisch zu scrollen an
-//		Nachrichten oder News können so ganz elegant aussehen! ^^
-		GUI_Menu_Entry news = Menu.addEntry(new GUI_Menu_Entry("News", "edit", 32, 24, null));
-			Menu.addEntryChild(news, new GUI_Menu_Entry("Der Bürgermeister wurde heute zum dritten mal vom OK gefilmt. Ihm wurden dabei Blumen überreicht.","Edit",24,null));
-			Menu.addEntryChild(news, new GUI_Menu_Entry("Berichte berichten, dass es auf der Welt immer mehr Ausländer gibt. Vorallem im Ausland!","Edit",24,null));
-			Menu.addEntryChild(news, new GUI_Menu_Entry("Lol, CSC ist pleite :'D amuggi, die Opfer! Soll jetzt gekauft werden von denen, die den Namen ASAP gekauft haben; Awesome Solutions for Awesome Problems!","Prio",24,null));
-			Menu.addEntryChild(news, new GUI_Menu_Entry("Weitere Meteoritenschauer über Frankfurt, München und Mainz","Edit",24,null));
-		
+//		Hier noch ein Beispiel: Klickt man hier auf den Parentknoten, werden
+//		im Thread die Childs geöffnet, so können Panels aneinander gehängt werden.
+		final GUI_Menu_Entry news = Menu.addEntry(new GUI_Menu_Entry("News", "edit", 32, 24, null));
+			final GUI_Menu_Entry line1 = Menu.addEntryChild(news, new GUI_Menu_Entry("Der Bürgermeister wurde heute zum dritten mal vom OK gefilmt. Ihm wurden dabei Blumen überreicht.","Edit",24,null));
+			final GUI_Menu_Entry line2 = Menu.addEntryChild(news, new GUI_Menu_Entry("Berichte berichten, dass es auf der Welt immer mehr Ausländer gibt. Vorallem im Ausland!","Edit",24,null));
+			final GUI_Menu_Entry line3 = Menu.addEntryChild(news, new GUI_Menu_Entry("Lol, CSC ist pleite :'D amuggi, die Opfer! Soll jetzt gekauft werden von denen, die den Namen ASAP gekauft haben; Awesome Solutions for Awesome Problems!","Prio",24,null));
+			final GUI_Menu_Entry line4 = Menu.addEntryChild(news, new GUI_Menu_Entry("Weitere Meteoritenschauer über Frankfurt, München und Mainz","Edit",24,null));
+			news.setOnClickEvent(new Thread(){
+				@Override
+				public void run() {
+					super.run();
+					if (!news.isOpen()) {
+						Frame.addPanel(new GUI_LogIn(),line1);
+						Frame.addPanel(new GUI_Wiki_Edit(),line2);
+						Frame.addPanel(new GUI_LogIn(),line3);
+						Frame.addPanel(new GUI_LogIn(),line4);
+					} else {
+						Frame.removePanel(line1);
+						Frame.removePanel(line2);
+						Frame.removePanel(line3);
+						Frame.removePanel(line4);
+					}
+				}
+			});
+			
 		//Weitere beispieleinträge
 		GUI_Menu_Entry wiki = Menu.addEntry(new GUI_Menu_Entry("Wiki", "book", null));
 		GUI_Menu_Entry nachrichten = Menu.addEntry(new GUI_Menu_Entry("Nachrichten", "note", null));
@@ -149,7 +166,10 @@ public class Main {
 		//Menüfuß
 		Menu.addEntry(new GUI_Menu_Entry(10)).setBackground(new Color(255, 128, 0));
 //		Den Hintergrund kann man auch noch ändern ^^
+		//Frame.setBackground(Color.BLACK);
 		Menu.setBackground(new Color(255,255,128));
+//		Zum schluss noch das Frame refreshen, damit alle änderungen sichtbar sind!
+		Frame.Refresh();
 	}
 	
 	
@@ -201,5 +221,7 @@ public class Main {
 			})).setMargin(0);
 
 		Menu.addEntry(new GUI_Menu_Entry(10)).setBackground(new Color(255, 128, 0));
+		
+		Frame.Refresh();
 	}
 }

@@ -1,6 +1,8 @@
 package sonok.main;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
@@ -14,6 +16,7 @@ import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import sonok.global.CPanel;
 import sonok.global.CPanelManager;
@@ -62,7 +65,21 @@ public class MainFrame extends JFrame {
 			public void windowActivated(WindowEvent arg0) {
 			}
 		});
-		
+		addComponentListener(new ComponentListener() {			
+			@Override
+			public void componentShown(ComponentEvent arg0) {
+			}			
+			@Override
+			public void componentResized(ComponentEvent arg0) {
+				updateWindow();				
+			}			
+			@Override
+			public void componentMoved(ComponentEvent arg0) {
+			}			
+			@Override
+			public void componentHidden(ComponentEvent arg0) {
+			}
+		});
 		return;
 	}
 
@@ -80,32 +97,48 @@ public class MainFrame extends JFrame {
 	public GUI_Menu getMenu() {
 		return menu;
 	}
-	public JPanel addPanel(JPanel p, guiMenuNode n) {
-		boolean firstadd = (panelmanager.count() == 0);
+	public JPanel addPanel(final JPanel p, final guiMenuNode n) {
+		boolean firstadd = !panelmanager.hasPanel();
 		
 		//TODO Doppeltes Hinzufügen vermeiden!
 		
-		panelmanager.add(new CPanel(p,n));
-		
+		panelmanager.addPanel(p,n);
+				
 		if (firstadd)
 			fitWindow();
-		
+				
 		return p;
 	}	
 	public JPanel addPanel(JPanel p) {
 		return addPanel(p, null);
 	}
+	public void removePanel(JPanel p) {
+		if (panelmanager.hasPanel()) {
+			panelmanager.removePanel(p);
+			if (!panelmanager.hasPanel()) {
+				fitWindow();
+			}
+		}		
+	}	
+	public void removePanel(guiMenuNode n) {
+		if (panelmanager.hasPanel()) {
+			panelmanager.removePanel(n);
+			if (!panelmanager.hasPanel()) {
+				fitWindow();
+			}
+		}	
+	}
 	public void clearPanels() {
-		for (int i = 0; i < panelmanager.count(); i++) {
-			this.remove(panelmanager.get(i));
+		for (int i = 0; i < panelmanager.PanelCount(); i++) {
+			this.remove(panelmanager.getPanel(i));
 		}
-		panelmanager.clear();
+		panelmanager.clearPanels();
 		fitWindow();		
 	}
 			
 	private void updateWindow(){		
 		final boolean hasMenu = (menu != null);
-		final boolean hasPanel = (panelmanager.count() > 0);		
+		final boolean hasPanel = (panelmanager.PanelCount() > 0);		
 		final int width = getWidth();
 		final int height = getHeight();
 		
@@ -115,8 +148,8 @@ public class MainFrame extends JFrame {
 		final int xPanel;
 		
 		if (hasMenu && hasPanel){
-			widthMenu = (int) Math.round(width * 0.3);
-			widthPanel = (int) Math.round(width * 0.7);
+			widthMenu = 250;
+			widthPanel = width-250;
 			xMenu = 0;
 			xPanel = widthMenu;	
 		} else if (hasMenu) {
@@ -154,12 +187,14 @@ public class MainFrame extends JFrame {
 		} else {	
 			panelmanager.setVisible(false);
 		}
+		
+		return;
 	}
 
 	private void fitWindow() {
 		final Dimension Screen = Toolkit.getDefaultToolkit().getScreenSize();
 		final boolean hasMenu = (menu != null);
-		final boolean hasPanel = (panelmanager.count() > 0);
+		final boolean hasPanel = (panelmanager.hasPanel());
 		final int x,y,w,h;
 		x = 10;
 		
@@ -180,9 +215,26 @@ public class MainFrame extends JFrame {
 			y = Screen.height / 2 - 300; // menu.getTotalHeight() / 2;
 			h = 600; //menu.getTotalHeight();
 		}		
-
-		moveTo(x,y,w,h,0);
+		
+		setBounds(x, y, w, h);
+		updateWindow();
+//		moveTo(x,y,w,h,3);
 	}
+	public void Refresh() {
+		updateWindow();
+	}
+//Override
+	@Override
+	public void setBackground(Color c) {
+		super.setBackground(c);
+		if (panelmanager != null) {
+			panelmanager.setBackground(c);	
+		}
+		if (menu != null) {
+			menu.setBackground(c);
+		}
+	}
+	
 //==========================================================================================
 //Bounce Fenster, Bounce!
 //==========================================================================================
@@ -237,7 +289,7 @@ public class MainFrame extends JFrame {
 					setBounds(curbounds.getRectangle());
 				}
 			}
-		}, 0, 10);
+		}, ((acceleration < 0) ? 250 : 10), 10);
 	}
 	public void moveTo(int x, int y, int w, int h, int acceleration) {
 		moveTo(new Rectangle(x,y,w,h),acceleration);

@@ -26,6 +26,8 @@ public class CPanel {
 		spdbounds = new RectangleD();
 		
 		menunode = n;
+				
+		return;
 	}
 	
 
@@ -39,11 +41,14 @@ public class CPanel {
 	public JPanel getPanel() {
 		return panel;
 	}
+	public guiMenuNode getNode() {
+		return menunode;
+	}
 	
 	public boolean Update(final int acceleration) {
 		boolean result = true;
 		
-		if (tarbounds != null) {
+		if (tarbounds != null && curbounds != null && spdbounds != null) {
 			  //Geschwindigkeitsvektoren
 				RectangleD accbounds = new RectangleD(
 					(tarbounds.x - curbounds.x) * acceleration / 1000,
@@ -83,9 +88,10 @@ public class CPanel {
 				} else {
 					panel.setBounds(curbounds.getRectangle());	
 				}
-		}
-
-		panel.repaint();
+		} else
+			result = false;
+		
+		panel.validate();
 		
 		return result;
 	}
