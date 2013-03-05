@@ -85,6 +85,7 @@ public class CPanel {
 					panel.setBounds(tarbounds.getRectangle());
 					tarbounds = null;
 					result = false;
+					System.out.println(panel.getBounds().toString());
 				} else {
 					panel.setBounds(curbounds.getRectangle());	
 				}

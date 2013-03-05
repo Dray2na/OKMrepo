@@ -96,10 +96,15 @@ public class CPanelManager extends JPanel {
 		new Timer(true).scheduleAtFixedRate(move,25,25);		
 	}
 	public void Update() {
-		final int x = 50;
-		int y = -scroll;
-		final int w = 500;
+//		global
+		final	int		ScrollBarSize = 10;//TODO
+//		counter
 		int height = 0;
+		
+//		position
+		final 	int 	x = 50 - ScrollBarSize;
+				int 	y = -scroll;
+		final 	int 	w = getWidth()-(x+ScrollBarSize);		
 		
 		if (panels.size()>0) {					
 			for (int i = 0; i < panels.size(); i++) {
@@ -111,8 +116,14 @@ public class CPanelManager extends JPanel {
 			}			
 		}
 		
-		maxScroll = height - getHeight() +50;
-		minScroll = -10;
+		int maxScroll = height - getHeight();
+		int minScroll = 0;
+		
+		if (scroll < minScroll) {
+			scroll = minScroll;
+		} else if (scroll > maxScroll){
+			scroll = maxScroll;
+		}
 		
 		return;
 	}
@@ -184,12 +195,6 @@ public class CPanelManager extends JPanel {
 
 	public void Scroll(int Scroll) {
 		scroll += Scroll;
-		
-		if (scroll < minScroll) {
-			scroll = minScroll;
-		} else if (scroll > maxScroll){
-			scroll = maxScroll;
-		}
 		
 		Update();
 		

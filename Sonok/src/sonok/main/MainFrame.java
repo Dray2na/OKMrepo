@@ -149,7 +149,7 @@ public class MainFrame extends JFrame {
 		
 		if (hasMenu && hasPanel){
 			widthMenu = 250;
-			widthPanel = width-250;
+			widthPanel = width-widthMenu;
 			xMenu = 0;
 			xPanel = widthMenu;	
 		} else if (hasMenu) {
@@ -200,20 +200,20 @@ public class MainFrame extends JFrame {
 		
 		if (hasMenu && hasPanel) {
 			w = 800;
-			y = Screen.height / 2 - 300;
 			h = 600;
+			y = Screen.height / 2 - h/2;
 		} else if (hasPanel) {
 			w = 550;
 			h = 600;
-			y = Screen.height / 2 - 300;
+			y = Screen.height / 2 - h/2;
 		} else if (hasMenu) {
 			w = 250;
-			y = Screen.height / 2 - 300; // menu.getTotalHeight() / 2;
-			h = 600; //menu.getTotalHeight();
+			h = 600;
+			y = Screen.height / 2 - h/2;
 		} else {
 			w = 100;
-			y = Screen.height / 2 - 300; // menu.getTotalHeight() / 2;
-			h = 600; //menu.getTotalHeight();
+			h = 100;
+			y = Screen.height / 2 - h/2;
 		}		
 		
 		setBounds(x, y, w, h);
