@@ -26,6 +26,11 @@ public class CPanel {
 		spdbounds = new RectangleD();
 		
 		menunode = n;
+		
+		if (panel != null && menunode != null) {
+			//panel.setBackground(menunode.getBackground());
+			menunode.setBackground(panel.getBackground());
+		}
 				
 		return;
 	}

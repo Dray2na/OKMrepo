@@ -172,13 +172,13 @@ public abstract class guiMenuNode extends guiComponent {
 		
 	 //draw
 		
-		g.setColor(color);
-				
 		if (isActive) {	
 
 			if (image != null) {
 				g.drawImage(image, 0, 0, w, h, null);			
 			}
+
+			g.setColor(color);
 			
 			g.setFont(getFont());
 			g.drawString(caption, textpos,(int) Math.round(h * 0.6));		

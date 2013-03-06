@@ -63,8 +63,7 @@ public class CPanelManager extends JPanel {
 								p.getPanel().getY()+p.getPanel().getHeight(),
 								mpos.y},4);
 
-			g.fillPolygon(poly);
-			
+			g.fillPolygon(poly);			
 			g.setColor(basecolor);
 			g.drawPolygon(poly);
 		}

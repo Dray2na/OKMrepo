@@ -1,6 +1,7 @@
 package sonok.global;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -11,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -120,6 +122,17 @@ abstract class guiComponent extends JPanel {
 	abstract void onHide(ComponentEvent e);
 	abstract void onMoveDone();
   //Getter & Setter
+	public BufferedImage toImage() {
+	    int w = getWidth();
+	    int h = getHeight();
+	    
+	    BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+	    Graphics2D g = bi.createGraphics();
+	    
+	    paint(g);
+	    return bi;
+	}
+	
 	public void moveTo(final Rectangle Bounds, final int acceleration) {
 		if (move != null) {
 			move.cancel();

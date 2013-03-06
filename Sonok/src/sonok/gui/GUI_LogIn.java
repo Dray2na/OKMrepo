@@ -25,12 +25,6 @@ public class GUI_LogIn extends JPanel implements SqlObject {
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
-
-		final Random random = new Random();
-		final int r = random.nextInt(256);
-		final int g = random.nextInt(256);
-		final int b = random.nextInt(256);
-		setBackground(new Color(r,g,b));
 		
 		textField_1 = new JTextField();
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
@@ -49,6 +43,12 @@ public class GUI_LogIn extends JPanel implements SqlObject {
 		gbc_textField.gridy = 3;
 		add(textField, gbc_textField);
 		textField.setColumns(10);
+
+		final Random random = new Random();
+		final int r = random.nextInt(256);
+		final int g = random.nextInt(256);
+		final int b = random.nextInt(256);
+		setBackground(new Color(r,g,b));
 	}
 
 	@Override

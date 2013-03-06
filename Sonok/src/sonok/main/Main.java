@@ -35,9 +35,9 @@ public class Main {
 		Frame.setMenu(Menu);
 		
 //		Lest euch bitte mal die Funktion durch
-		//makeMenu_Mit_Kommentaren();
+		makeMenu_Mit_Kommentaren();
 //		Danach könnt ihr die benutzen
-		makeMenu();
+		//makeMenu();
 	}
 	
 	private static void makeMenu_Mit_Kommentaren() {
@@ -189,19 +189,24 @@ public class Main {
 				ticker.setForeground(Color.YELLOW);
 							
 			final GUI_Menu_Entry news = Menu.addEntry(new GUI_Menu_Entry("News", "edit", 32, 24, null));
+				final GUI_LogIn l1 = new GUI_LogIn();
+				final GUI_LogIn l2 = new GUI_LogIn();
+				final GUI_LogIn l3 = new GUI_LogIn();
+				final GUI_LogIn l4 = new GUI_LogIn();
 				final GUI_Menu_Entry line1 = Menu.addEntryChild(news, new GUI_Menu_Entry("Der Bürgermeister wurde heute zum dritten mal vom OK gefilmt. Ihm wurden dabei Blumen überreicht.","Edit",24,null));
 				final GUI_Menu_Entry line2 = Menu.addEntryChild(news, new GUI_Menu_Entry("Berichte berichten, dass es auf der Welt immer mehr Ausländer gibt. Vorallem im Ausland!","Edit",24,null));
 				final GUI_Menu_Entry line3 = Menu.addEntryChild(news, new GUI_Menu_Entry("Lol, CSC ist pleite :'D amuggi, die Opfer! Soll jetzt gekauft werden von denen, die den Namen ASAP gekauft haben; Awesome Solutions for Awesome Problems!","Prio",24,null));
 				final GUI_Menu_Entry line4 = Menu.addEntryChild(news, new GUI_Menu_Entry("Weitere Meteoritenschauer über Frankfurt, München und Mainz","Edit",24,null));
+								
 				news.setOnClickEvent(new Thread(){
 					@Override
 					public void run() {
 						super.run();
 						if (!news.isOpen()) {
-							Frame.addPanel(new GUI_LogIn(),line1);
-							Frame.addPanel(new GUI_Wiki_Edit(),line2);
-							Frame.addPanel(new GUI_LogIn(),line3);
-							Frame.addPanel(new GUI_LogIn(),line4);
+							Frame.addPanel(l1,line1);
+							Frame.addPanel(l2,line2);
+							Frame.addPanel(l3,line3);
+							Frame.addPanel(l4,line4);
 						} else {
 							Frame.removePanel(line1);
 							Frame.removePanel(line2);
@@ -235,7 +240,7 @@ public class Main {
 				})).setMargin(0);
 
 			Menu.addEntry(new GUI_Menu_Entry(10)).setBackground(new Color(255, 128, 0));
-			Menu.setBackground(new Color(255,255,128));
+			Frame.setBackground(new Color(255,255,128));
 			
 			Frame.Refresh();
 	}
